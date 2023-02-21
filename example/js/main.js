@@ -7,15 +7,18 @@
 
   // Note that by using the CDN version of golgi.js, we must specify absolute paths for
   //  the component and assembly paths in the context object.  Use window.location.origin for this
+  //  This example is designed to run directly from the /example folder in the Github repo
+  //  so we add /example to the window.location.origin. Adjust as required for your own setup
 
   // We're also adding a toSVG() method to the context, for use with components that use
   //  Feather.js icons.
 
+  let urlRoot = window.location.origin + '/example';
   let context = {
     componentPaths: {
-      sbadmin: window.location.origin + '/js/components/sbadmin/'
+      sbadmin: urlRoot + '/js/components/sbadmin/'
     },
-    assemblyPath: window.location.origin + '/js/assemblies/',
+    assemblyPath: urlRoot + '/js/assemblies/',
     toSVG: function(element) {
       if (typeof feather !== 'undefined') {
         const name = element.getAttribute('data-feather');
