@@ -42,7 +42,7 @@
   // fetch the pre-bundled sbadmin components and instantiate them.
   //  Note: don't await this but let it run asynchronously in the background
 
-  golgi.fetch_optimised_components('sbadmin', context);
+  await golgi.fetch_optimised_components('sbadmin', context);
 
   // now render the root assembly, which will start everything off.  
   //  Note that due to the previous command, by the time the
