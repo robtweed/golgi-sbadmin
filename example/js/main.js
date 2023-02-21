@@ -13,7 +13,7 @@
   // We're also adding a toSVG() method to the context, for use with components that use
   //  Feather.js icons.
 
-  let urlRoot = window.location.origin + '/example';
+  let urlRoot = window.location.origin + '/golgi-sbadmin/example';
   let context = {
     componentPaths: {
       sbadmin: urlRoot + '/js/components/sbadmin/'
