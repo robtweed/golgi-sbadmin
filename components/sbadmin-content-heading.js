@@ -1,0 +1,1 @@
+function load(){let t="sbadmin-content-heading",e=-1;customElements.define(t,class extends HTMLElement{constructor(){super(),e++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML='<style>.mt-4{margin-top:1.5rem!important}</style><h1 class="mt-4"></h1>',this.name=t+"-"+e}setState(t){t.name&&(this.name=t.name),t.text&&(this.rootElement.textContent=t.text)}})}export{load};

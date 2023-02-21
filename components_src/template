@@ -1,0 +1,13 @@
+let def = {
+  name: 'sbadmin-',
+
+  html: `
+
+  `,
+
+  methods: `
+
+  `
+};
+export {def};
+

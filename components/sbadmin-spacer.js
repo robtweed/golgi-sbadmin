@@ -1,0 +1,1 @@
+function load(){let e="sbadmin-spacer",t=-1;customElements.define(e,class extends HTMLElement{constructor(){super(),t++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML="<style>*,::after,::before{box-sizing:border-box}div{opacity:0}</style><div>_</div>",this.name=e+"-"+t}undefined})}export{load};
