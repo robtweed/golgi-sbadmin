@@ -26,7 +26,7 @@ so the standard Bootstrap 5 stylesheet is not needed.
 
 # Check it Out
 
-See the [*/examples*](./examples) folder in this repository.
+See the [*/example*](./example) folder in this repository.
 
 You'll find a fully worked example that you can copy to your Web Server.
 
