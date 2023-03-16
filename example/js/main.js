@@ -13,7 +13,7 @@
 
   let context = {
     componentPaths: {
-      sbadmin: window.location.origin + '/js/components/sbadmin/'
+      sbadmin: 'https://robtweed.github.io/golgi-sbadmin/components/'
     },
     assemblyPath: window.location.origin + '/js/assemblies/',
     toSVG: function(element) {

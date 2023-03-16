@@ -7,13 +7,13 @@ export function load() {
     <sbadmin-carousel-item active="true">
 
       <sbadmin-card bgColor="white" textColor="dark" widthStyle="60%" position="center">
-        <sbadmin-card-header text="PhotoEntry Controller" />
+        <sbadmin-card-header text="Carousel Card Demo" />
         <sbadmin-card-body>
           <sbadmin-card-text>
-Testing
+This is a simple example of a carousel card.
           </sbadmin-card-text>
         </sbadmin-card-body>
-        <sbadmin-card-footer text="My footer Text" />
+        <sbadmin-card-footer text="The card can also have footer text" />
       </sbadmin-card>
 
     </sbadmin-carousel-item>
@@ -21,7 +21,7 @@ Testing
     <sbadmin-carousel-item>
 
       <sbadmin-card bgColor="white" textColor="dark" widthStyle="60%" position="center">
-        <sbadmin-card-header text="Panel 2" />
+        <sbadmin-card-header text="Form Component Demonstration" />
         <sbadmin-card-body>
           <sbadmin-form>
             <fieldset>
@@ -49,7 +49,7 @@ Testing
             </fieldset>      
           </sbadmin-form>
         </sbadmin-card-body>
-        <sbadmin-card-footer text="My footer Text 2" />
+        <sbadmin-card-footer text="Card Footer Text" />
       </sbadmin-card>
 
     </sbadmin-carousel-item>
@@ -57,13 +57,13 @@ Testing
     <sbadmin-carousel-item>
 
       <sbadmin-card bgColor="white" textColor="dark" widthStyle="60%" position="center">
-        <sbadmin-card-header text="Panel 3" />
+        <sbadmin-card-header text="Carousel Card 3" />
         <sbadmin-card-body>
           <sbadmin-card-text>
-This is Panel 3
+A Third Carousel Card
           </sbadmin-card-text>
         </sbadmin-card-body>
-        <sbadmin-card-footer text="My footer Text 3" />
+        <sbadmin-card-footer text="My footer Text" />
       </sbadmin-card>
 
     </sbadmin-carousel-item>
@@ -103,7 +103,6 @@ This is Panel 3
         let _this = this;
         this.onClicked = function(e) {
           console.log('*** button clicked ****');
-
           console.log(_this.form.values);
         }
       },
@@ -111,7 +110,6 @@ This is Panel 3
         let _this = this;
         this.onClicked = function(e) {
           let form = _this.getParentComponent('sbadmin-form');
-          console.log(9999991111);
           console.log(form);
           let cbg = form.fields[7];
           let cb = cbg.checkboxes[0];

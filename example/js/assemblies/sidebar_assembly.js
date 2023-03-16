@@ -3,8 +3,8 @@ export function load() {
   let gx=`
 
 <sbadmin-sidebar-menu>
-  <sbadmin-sidebar-menu-item text="About Us" iconName="info" contentPage="about"/>
-  <sbadmin-sidebar-heading text="Our Products" />
+  <sbadmin-sidebar-menu-item text="Carousel and Form Demo" iconName="info" contentPage="about"/>
+  <sbadmin-sidebar-heading text="Multi-Level Menu Demo" />
 
   <sbadmin-sidebar-nested-menu iconName="server" text="Back-end Frameworks">
     <sbadmin-sidebar-menu-item text="QEWD" contentPage="qewd"/>

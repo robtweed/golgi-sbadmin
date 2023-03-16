@@ -1,7 +1,7 @@
 export function load() {
   let gx=`
 <sbadmin-sidebar-toggle />
-<sbadmin-brand text="PhotoEntry Competition and Viewing Controller" golgi:hook="configure" />
+<sbadmin-brand text="Golgi SBAdmin Module Library Demonstration" />
   `;
 
   return {gx};
