@@ -203,10 +203,6 @@ small, .small {
 
     setPageActive(pageName, obj) {
 
-      console.log('**** setPageActive for ' + pageName);
-      console.log(this);
-      console.log(this.contentPages);
-
       // switch the active menu item if appropriate
 
       let menuComp = this.page2MenuMap.get(pageName);
@@ -226,27 +222,20 @@ small, .small {
         page.hide();
       }
       page = this.contentPages.get(pageName);
-      console.log(111111111);
-      console.log(page);
       
       if (page) {
         page.show();
         if (page.onSelected) {
-          console.log(222222222);
           page.onSelected.call(page, obj);
         }
       }
     }
 
     async switchToPage(pageName, obj) {
-      console.log('**** switchToPage ' + pageName);
       if (!this.contentPages.has(pageName)) {
-        console.log('*** loading content page ' + pageName);
         this.context.assemblyName = pageName;
         await this.renderAssembly(pageName, this.contentTarget, this.context);
-        console.log(33333333);
       }
-      console.log(444444);
       this.setPageActive(pageName, obj);
     }
 

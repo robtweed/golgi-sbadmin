@@ -16,11 +16,7 @@
   let urlRoot = window.location.origin + '/golgi-sbadmin/example';
   let context = {
     componentPaths: {
-<<<<<<< HEAD
       sbadmin: 'https://robtweed.github.io/golgi-sbadmin/components/'
-=======
-      sbadmin: urlRoot + '/js/components/sbadmin/'
->>>>>>> master/master
     },
     assemblyPath: urlRoot + '/js/assemblies/',
     toSVG: function(element) {

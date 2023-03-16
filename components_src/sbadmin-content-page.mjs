@@ -35,10 +35,7 @@ let def = {
       this.rootComponent.contentPages.set(this.name, this);
       let _this = this;
       this.onSelected = function(obj) {
-        console.log(9999999);
-        console.log(this);
         let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        console.log('w = ' + w);
         if (w < 992) {
           this.rootComponent.rootElement.classList.toggle('sidenav-toggled');
         }

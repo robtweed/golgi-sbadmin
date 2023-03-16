@@ -89,8 +89,6 @@ a {
     switchPage() {
       let root = this.rootComponent;
       let activeMenuComponent = root.getMenuItemActive();
-      console.log('activeMenuComponent:');
-      console.log(activeMenuComponent);
       if (activeMenuComponent) {
         activeMenuComponent.setInactive();
       }
