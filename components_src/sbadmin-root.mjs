@@ -125,7 +125,7 @@ span {
 }
 .bg-light {
     --bs-bg-opacity: 1;
-    background-color: rgba(var(--bs-light-rgb),var(--bs-bg-opacity))!important;
+    background-color: rgba(248, 249, 250),var(--bs-bg-opacity));
 }
 .mt-auto {
     margin-top: auto!important;
@@ -174,11 +174,11 @@ small, .small {
     <div id="layoutSidenav_nav">
       <nav class="sidenav shadow-right sidenav-light navbar-nav-scroll" id="sidenavAccordion" golgi:prop="sidebarTarget"></nav>
     </div>
-    <div id="layoutSidenav_content">
+    <div id="layoutSidenav_content" golgi:prop="contentTag">
       <main>
         <div class="container-fluid px-4" golgi:prop="contentTarget"></div>
       </main>
-      <footer class="py-4 bg-light mt-auto">
+      <footer class="py-4 bg-light mt-auto" golgi:prop="footerTag">
         <div class="container-fluid px-4">
           <div class="d-flex align-items-center justify-content-between small" golgi:prop="footerTarget"></div>
         </div>
@@ -189,6 +189,7 @@ small, .small {
   `,
 
   methods: `
+
     getMenuItemActive() {
       return this.ActiveMenuComponent;
     }
@@ -240,12 +241,29 @@ small, .small {
     }
 
     setState(state) {
+      if (state.header_color) {
+        this.topbarTarget.style.backgroundColor = state.header_color;
+      }
+      if (state.header_colour) {
+        this.topbarTarget.style.backgroundColor = state.header_colour;
+      }
+      if (state.sidebar_color) {
+        this.sidebarTarget.style.backgroundColor = state.sidebar_color;
+      }
       if (state.sidebar_colour) {
-        let target = this.sidebarTarget.classList;
-        target.remove(sidebar_colour);
-        sidebar_colour = state.sidebar_colour;
-        if (!sidebar_colour.includes('-')) sidebar_colour = 'bg-gradient-' + state.sidebar_colour;
-        target.add(sidebar_colour);
+        this.sidebarTarget.style.backgroundColor = state.sidebar_colour;
+      }
+      if (state.footer_color) {
+        this.footerTag.style.backgroundColor = state.footer_color;
+      }
+      if (state.footer_colour) {
+        this.footerTag.style.backgroundColor = state.footer_colour;
+      }
+      if (state.content_color) {
+        this.contentTag.style.backgroundColor = state.content_color;
+      }
+      if (state.content_colour) {
+        this.contentTag.style.backgroundColor = state.content_colour;
       }
     }
 
