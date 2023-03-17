@@ -76,6 +76,9 @@ a {
       if (state.href) {
         this.aTag.href = state.href;
       }
+      if (state.active === true) {
+        this.switchPage();
+      }
     }
 
     setActive() {

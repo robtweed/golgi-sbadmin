@@ -43,6 +43,12 @@ The SBAdmin User Interface is built around a core set of panels:
 - a left-hand Menu panel
 - a right-hand Main Content panel in which the content related to a specific menu option is displayed
 
+Here's a minimal example of how they appear in a browser:
+
+![panel layout](images/panels.png)
+
+The Panels are used as follows:
+
 ## The Title/Header Panel
 
 This panel is mostly used to display a title and/or information text related to the application
