@@ -93,6 +93,8 @@ Golgi-based applications do not require any bundling/compilation step or complex
 
 So all you need is a web server to which you can upload files and you're good to go.
 
+Now take this [*Getting Started*](/GETTING_STARTED.md) tutorial.
+
 # *golgi-sbadmin* Component Design and Construction
 
 Each *golgi-sbadmin* WebComponent has been authored using 
