@@ -161,7 +161,6 @@ input, button, select, optgroup, textarea {
 
   methods: `
     setState(state) {
-      console.log(state);
       if (state.name) {
         this.name = state.name;
       }
