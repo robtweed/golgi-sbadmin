@@ -1,5 +1,5 @@
 let def = {
-  name: 'sbadmin-copyright',
+  name: 'sbadmin-footer-text',
   useShadowDOM: true,
 
   css: `
@@ -9,10 +9,7 @@ let def = {
   `,
 
   html: `
-<p class="txt-small">
-  <span>Copyright &copy; </span>
-  <span golgi:prop="textTarget" />
-</p>
+<div class="txt-small" golgi:prop="textTag"></div>
   `,
 
   methods: `
@@ -21,10 +18,10 @@ let def = {
         this.name = state.name;
       }
       if (state.text) {
-        this.textTarget.textContent = state.text;
+        this.rootElement.textContent = state.text;
       }
       if (state.textContent) {
-        this.textTarget.textContent = state.textContent;
+        this.rootElement.textContent = state.textContent;
       }
       if (state.center === true) {
         let footer = this.rootComponent.footerTarget;
@@ -34,6 +31,7 @@ let def = {
       if (state.color) {
         this.rootElement.style.color = state.color;
       }
+
     }
 
   `

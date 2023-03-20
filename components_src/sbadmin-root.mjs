@@ -134,7 +134,10 @@ span {
     align-items: center!important;
 }
 .justify-content-between {
-    justify-content: space-between!important;
+    justify-content: space-between;
+}
+.justify-content-center {
+    justify-content: center;
 }
 .d-flex {
     display: flex!important;

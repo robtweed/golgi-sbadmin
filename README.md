@@ -123,11 +123,95 @@ minified *golgi-sbadmin* WenComponents.
 
 
 
-
+----
 
 # Component Reference
 
-## 
+## Top Level Component
+
+
+**sbadmin-root**
+
+### Purpose
+
+Your top-level / root assembly should always use the *sbadmin-root* Golgi Component as its top-level Component.
+
+It creates the core SBAdmin UI superstructure, consisting of 4 panels:
+
+- header
+- footer
+- left-hand menu
+- content
+
+### Append Targets
+
+Content Components can be appended to the following Target names:
+
+- topbarTarget
+- footerTarget
+- sidebarTarget
+- contentTarget
+
+### State Attributes
+
+#### Specifying Panel Background colour
+
+- header_bg_color
+- footer_bg_color
+- sidebar_bg_color
+- content_bg_color
+
+The value should be any valid CSS value used in the *background-color* style property
+
+#### Specifying Panel Text colour
+
+- header_text_color
+- footer_text_color
+- sidebar_text_color
+- content_text_color
+
+The value should be any valid CSS value used in the *background-color* style property
+
+Note that these attributes will usually not affect text that is created within other Golgi SBAdmin Components, since their styling is usually included within their Shadow DOM.
+
+----
+
+## Header Panel Components
+
+The following Golgi Components are designed for use within the SBAdmin UI's Header Panel
+
+**sbadmin-sidebar-toggle**
+
+### Purpose
+
+This Component creates a visual, clickable device that will slide the left-hand menu panel in and out of view.
+
+If added to the header, the SBAdmin UI will automatically slide the menu out of view on devices that are too narrow to display in full both the menu and content panels.
+
+### State Attributes
+
+- *color*: Specifies the colour in which the toggle device's "hamburger" is displayed.  Defaults to black.
+
+  The value should be any valid CSS value used in the *color* style property
+
+----
+
+**sbadmin-brand**
+
+### Purpose
+
+This Component should be used to display appropriately-styled text within the SBAdmin UI's Header Panel
+
+
+### State Attributes
+
+- *text*: The text to display
+
+- *color*: Specifies the colour in which the text is displayed.  Defaults to black.
+
+  The value should be any valid CSS value used in the *color* style property
+
+----
 
 # License
 

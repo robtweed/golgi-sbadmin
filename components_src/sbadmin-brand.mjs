@@ -49,6 +49,9 @@ a {
       if (state.text) {
         this.childrenTarget.textContent = state.text;
       }
+      if (state.textContent) {
+        this.childrenTarget.textContent = state.textContent;
+      }
       if (state.href) {
         this.rootElement.href = state.href;
       }

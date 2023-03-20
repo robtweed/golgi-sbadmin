@@ -312,7 +312,7 @@ The header panel should now have changed to having white text in a grey backgrou
 
 ## Customising the SBAdmin Header Panel
 
-Rather than using simple HTML tags within the SBAdmin Panel, you should use the other Golgi SBAdmin WebComponents that are designed for use within it.  These include their own specific, built-in styling:
+Rather than using simple HTML tags within the SBAdmin Header Panel, you should use the other Golgi SBAdmin WebComponents that are designed for use within it.  These include their own specific, built-in styling:
 
 - *sbadmin-brand*: use this for displaying any text that you want to appear in the Header Panel
 - *sbadmin-sidebar-toggle*: use this to provide a responsive display that automatically takes account of the screen width.
@@ -416,5 +416,65 @@ If you've made the edits above correctly, on reloading the *index.html* file, th
 
 ![Customised Header](images/header.png)
 
+----
 
+## Customising the SBAdmin Footer Panel
+
+Rather than using simple HTML tags within the SBAdmin Footer Panel, you should use the other Golgi SBAdmin WebComponents that are designed for use within it.  These include their own specific, built-in styling:
+
+- *sbadmin-footer-text*: use this for displaying any text that you want to appear in the Footer Panel
+- *sbadmin-copyright*: use this to display a copyright notice
+
+These two Components are very similar: the only difference is that the *sbadmin-copyright* Component prefixes the specified text with "Copyright &copy;".
+
+Let's try one out.  
+
+Re-edit the *js/assemblies/root_assembly.js* file and add the *sbadmin-footer-text* tag as a child tag of the *sbadmin-root* tag.
+
+        export function load() {
+          let gx=`
+        <sbadmin-root header_bg_color="#aabbcc">
+
+          <span golgi:appendTo="topbarTarget">
+            <sbadmin-sidebar-toggle />
+            <sbadmin-brand text="Golgi SBAdmin Module Library Demonstration" color="yellow" />
+          </span>
+          
+          <sbadmin-footer-text golgi:appendTo="footerTarget">
+            Developed using the golgi-sbadmin WebComponent Library
+          </sbadmin-footer-text>
+
+        </sbadmin-root>
+          `;
+          return {gx};
+        };
+
+Note that the *sbadmin-footer-text* Component must be appended to the *sbadmin-root* Component's *footerTarget".
+
+Note also that the text itself can be specified withing the *textContent* of the *sbadmin-footer-text* - ie between its opening and closing tags.
+
+Alternatively you can specify the text using a *text* attribute, eg:
+
+          <sbadmin-footer-text text="Developed using the golgi-sbadmin WebComponent Library" golgi:appendTo="footerTarget" />
+
+
+Reload the *index.html* file into the browser and you should now see the specified text appearing in the footer.
+
+By default the text colour is black.  To change this, add a *color* attribute, eg:
+
+          <sbadmin-footer-text golgi:appendTo="footerTarget" color="red">
+            Developed using the golgi-sbadmin WebComponent Library
+          </sbadmin-footer-text>
+
+By default the text is left-justified within the footer.  You can optionally centralise it by adding the attribute: *center="true"*, eg:
+
+          <sbadmin-footer-text golgi:appendTo="footerTarget" color="red" center="true">
+            Developed using the golgi-sbadmin WebComponent Library
+          </sbadmin-footer-text>
+
+
+The SBAdmin UI should now appear like this in your browser:
+
+
+![Customised Footer](images/footer.png)
 
