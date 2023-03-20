@@ -22,7 +22,7 @@ button {
 .btn-transparent-dark {
     background-color: transparent;
     border-color: transparent;
-    color: rgba(3,4,5,0.5)!important;
+    color: rgba(3,4,5,0.5);
 }
 .btn-icon {
     padding: 0;
@@ -100,6 +100,9 @@ button {
     setState(state) {
       if (state.name) {
         this.name = state.name;
+      }
+      if (state.color) {
+        this.rootElement.style.color = state.color;
       }
     }
 

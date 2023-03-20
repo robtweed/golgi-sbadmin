@@ -58,6 +58,11 @@ a {
         img.setAttribute('height', 56);
         this.rootElement.appendChild(img);
       }
+
+      if (state.color) {
+        this.childrenTarget.style.color = state.color;
+      }
+
     }
 
   `

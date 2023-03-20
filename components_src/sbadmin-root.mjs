@@ -241,35 +241,62 @@ small, .small {
     }
 
     setState(state) {
-      if (state.header_color) {
-        this.topbarTarget.style.backgroundColor = state.header_color;
+      if (state.header_bg_color) {
+        this.topbarTarget.style.backgroundColor = state.header_bg_color;
       }
-      if (state.header_colour) {
-        this.topbarTarget.style.backgroundColor = state.header_colour;
+      if (state.header_bg_colour) {
+        this.topbarTarget.style.backgroundColor = state.header_bg_colour;
       }
-      if (state.sidebar_color) {
-        this.sidebarTarget.style.backgroundColor = state.sidebar_color;
+      if (state.sidebar_bg_color) {
+        this.sidebarTarget.style.backgroundColor = state.sidebar_bg_color;
       }
-      if (state.sidebar_colour) {
-        this.sidebarTarget.style.backgroundColor = state.sidebar_colour;
+      if (state.sidebar_bg_colour) {
+        this.sidebarTarget.style.backgroundColor = state.sidebar_bg_colour;
       }
-      if (state.footer_color) {
-        this.footerTag.style.backgroundColor = state.footer_color;
+      if (state.footer_bg_color) {
+        this.footerTag.style.backgroundColor = state.footer_bg_color;
       }
-      if (state.footer_colour) {
-        this.footerTag.style.backgroundColor = state.footer_colour;
+      if (state.footer_bg_colour) {
+        this.footerTag.style.backgroundColor = state.footer_bg_colour;
       }
-      if (state.content_color) {
-        this.contentTag.style.backgroundColor = state.content_color;
+      if (state.content_bg_color) {
+        this.contentTag.style.backgroundColor = state.content_bg_color;
       }
-      if (state.content_colour) {
-        this.contentTag.style.backgroundColor = state.content_colour;
+      if (state.content_bg_colour) {
+        this.contentTag.style.backgroundColor = state.content_bg_colour;
       }
+
+      if (state.header_text_color) {
+        this.topbarTarget.style.color = state.header_text_color;
+      }
+      if (state.header_text_colour) {
+        this.topbarTarget.style.color = state.header_text_colour;
+      }
+      if (state.sidebar_text_color) {
+        this.sidebarTarget.style.color = state.sidebar_text_color;
+      }
+      if (state.sidebar_text_colour) {
+        this.sidebarTarget.style.color = state.sidebar_text_colour;
+      }
+      if (state.footer_text_color) {
+        this.footerTag.style.color = state.footer_text_color;
+      }
+      if (state.footer_text_colour) {
+        this.footerTag.style.color = state.footer_text_colour;
+      }
+      if (state.content_text_color) {
+        this.contentTag.style.color = state.content_text_color;
+      }
+      if (state.content_text_colour) {
+        this.contentTag.style.color = state.content_text_colour;
+      }
+
     }
 
     async onBeforeState() {
       this.contentPages = new Map();
       this.page2MenuMap = new Map();
+      this.childrenTarget = this.contentTarget;
     }
 
   `
