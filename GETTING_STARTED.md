@@ -666,6 +666,24 @@ Save the three files on your web server's file system and reload the *index.html
 You should now see three menu options, and clicking them will switch the content between your three coresponding Content Panel Assemblies.
 
 
+### Specifying A Default Menu Option
+
+So far, in order to display anything in the Content Panel, you've had to explictly choose a menu item.
+
+You can optionally define one of the menu options as being *active*, meaning that its associated Content Panel Assembly will be rendered automatically when the SBAdmin UI is initially rendered in the browser.
+
+To do so, simply add the attribute: *active="true"* to the required menu option, eg:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" active="true" />
+            <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+            <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+          </sbadmin-sidebar-menu>
+
+The "Hello World!" Content Panel should now automatically appear when the UI is first rendered.
+
+
 ### Multi-level Menus
 
 The *golgi-sbadmin* Library includes Components that allow you to very quickly and easily create multi-level menus that can visually expand and contract as you navigate within them.
@@ -735,5 +753,51 @@ And when you click on the text "Select from Within", the three menu items appear
 ![Multi Level Menu Open](images/multilevel2.png)
 
 Clicking the text "Select from Within" again will hide the menu items again.
+
+
+### Multi-level Sub-Menus
+
+You can add as many sub-menu levels as you wish.  To do so, you need to use the *sbadmin-sidebar-sub-menu* Component.
+
+Any number of *sbadmin-sidebar-sub-menu* Components can be embedded inside each other, though the practical limitation tends to be the available width of the Menu Panel.
+
+As before, the bottom-level "leaf" menu options, embedded within one or more *sbadmin-sidebar-sub-menu* Components, are specified
+using the *sbadmin-sidebar-menu-item* Component.
+
+Let's quickly try it out:
+
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+            <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+            <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+
+            <sbadmin-sidebar-heading text="Multi-level Menu" />
+
+            <sbadmin-sidebar-nested-menu text="Select from Within">
+
+              <sbadmin-sidebar-sub-menu text="Further Treasures Await">
+
+                <sbadmin-sidebar-menu-item text="First Option" contentPage="helloworld" />
+                <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+                <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+
+              </sbadmin-sidebar-sub-menu>
+
+              <sbadmin-sidebar-sub-menu text="Interesting Stuff Here" iconName="github">
+                <sbadmin-sidebar-sub-menu text="Another Level">
+                  <sbadmin-sidebar-menu-item text="Fourth Option" contentPage="helloworld" />
+                  <sbadmin-sidebar-menu-item text="Fifth Option" contentPage="content2" />
+                  <sbadmin-sidebar-menu-item text="Sixth Option" contentPage="content3" />
+                </sbadmin-sidebar-sub-menu>
+              </sbadmin-sidebar-sub-menu>
+
+            </sbadmin-sidebar-nested-menu>
+
+          </sbadmin-sidebar-menu>
+
+
+So that's pretty much everything you need to know to create your SBAdmin Menus.  We'll now move to creating your Content Panels.
 
 

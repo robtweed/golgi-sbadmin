@@ -300,6 +300,22 @@ small, .small {
       this.contentPages = new Map();
       this.page2MenuMap = new Map();
       this.childrenTarget = this.contentTarget;
+
+      this.context.toSVG = function(element) {
+      if (typeof feather !== 'undefined') {
+        const name = element.getAttribute('data-feather');
+        if (name) {
+          const svgString = feather.icons[name].toSvg();
+          const svgDocument = new DOMParser().parseFromString(
+            svgString,
+            'image/svg+xml',
+          );
+          const svgElement = svgDocument.querySelector('svg');
+          element.parentNode.replaceChild(svgElement, element);
+        }
+      };
+    }
+
     }
 
   `
