@@ -547,6 +547,12 @@ This Component can define three things:
 - an icon (optional)
 - a Golgi Assembly that will be displayed in the Content Panel when the menu text is clicked or tapped.
 
+These are specified using the following corresponding attributes (which are case-sensitive):
+
+- text
+- iconName
+- contentPage
+
 So let's add one by editing these lines in your *js/assemblies/root_assembly.js* file:
 
           <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
@@ -559,7 +565,7 @@ If you save this version of the *js/assemblies/root_assembly.js* file and reload
 
 ![Menu Hello World](images/menu2.png)
 
-If you try clicking the *Hello World* menu option, nothing will currently happen.  In fact if you wer to examine the browser's JavaScript Console, you'd see that it reports an error, telling you that it can't find your Golgi Assembly named *helloworld*.  That, of course, is because we haven't yet created it.
+If you try clicking the *Hello World* menu option, nothing will currently happen.  In fact if you were to examine the browser's JavaScript Console, you'd see that it reports an error, telling you that it can't find your Golgi Assembly named *helloworld*.  That, of course, is because we haven't yet created it.
 
 ### Content Panel Assemblies
 
@@ -590,4 +596,144 @@ Having saved this new Assembly file, try reloading the *index.html* file into th
 When you click the "Hello World" Menu option, you should now see the next "Hello World!" appear in the Content Panel:
 
 ![Content Hello World](images/menu3.png)
+
+
+### Menu Icons
+
+You can optionally add an icon next to each of your menu options to add some visual interest.
+
+Golgi's SBAdmin UI implementation makes use of [the Feather icon library](https://feathericons.com/).
+
+To apply an icon, find the one you want from the Feather Icon web page and note its name.  I'm going to use the
+one named *globe" for my Hello World menu item.  
+
+Now re-edit the *js/assemblies/root_assembly.js* file and add the icon name as an *iconName* attribute to the *sbadmin-sidebar-menu-item* Component:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+          </sbadmin-sidebar-menu>
+
+The globe icon should now appear when you save and reload:
+
+![Icon Hello World](images/menu4.png)
+
+
+### Multiple Menu Options
+
+So now let's add a couple more simple menu options with corresponding simple Content Panel Assemblies, so we can see how the content switches as you click the menu options.
+
+First, re-edit the *js/assemblies/root_assembly.js* file and add two more menu items here:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+            <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+            <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+          </sbadmin-sidebar-menu>
+
+Feel free to add icons to them if you wish.
+
+Next, create the two new Content Panel Assemblies:
+
+#### *js/assemblies/content2.js*
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+          <div>This is the Content for the Second Menu Option</div>
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+#### *js/assemblies/content3.js*
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+          <div>This is the Content for the Third Menu Option</div>
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+
+Save the three files on your web server's file system and reload the *index.html* file.
+
+You should now see three menu options, and clicking them will switch the content between your three coresponding Content Panel Assemblies.
+
+
+### Multi-level Menus
+
+The *golgi-sbadmin* Library includes Components that allow you to very quickly and easily create multi-level menus that can visually expand and contract as you navigate within them.
+
+Let's add one.
+
+
+First, re-edit the *js/assemblies/root_assembly.js* file and add a new heading:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+            <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+            <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+
+            <sbadmin-sidebar-heading text="Multi-level Menu" />
+
+          </sbadmin-sidebar-menu>
+
+
+A multi-level menu first requires use of the *sbadmin-sidebar-nested-menu* Component to create the outer container.
+You define its text and optionally an iconName.
+
+So edit this section of the file to look like this:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+            <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+            <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+
+            <sbadmin-sidebar-heading text="Multi-level Menu" />
+
+            <sbadmin-sidebar-nested-menu text="Select from Within">
+            </sbadmin-sidebar-nested-menu>
+
+          </sbadmin-sidebar-menu>
+
+We could add menu items inside this - let's just re-use the ones we've already created for now:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+            <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+            <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+
+            <sbadmin-sidebar-heading text="Multi-level Menu" />
+
+            <sbadmin-sidebar-nested-menu text="Select from Within">
+              <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+              <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+              <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+            </sbadmin-sidebar-nested-menu>
+
+          </sbadmin-sidebar-menu>
+
+
+Try it out by saving this version of the file and reloading the *index.html* file.
+
+You should see this:
+
+![Multi Level Menu Closed](images/multilevel1.png)
+
+
+And when you click on the text "Select from Within", the three menu items appear:
+
+![Multi Level Menu Open](images/multilevel2.png)
+
+Clicking the text "Select from Within" again will hide the menu items again.
+
 
