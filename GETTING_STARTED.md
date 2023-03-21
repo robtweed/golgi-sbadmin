@@ -478,3 +478,116 @@ The SBAdmin UI should now appear like this in your browser:
 
 ![Customised Footer](images/footer.png)
 
+
+----
+
+## Customising the SBAdmin Menu Panel
+
+This is where the real fun begins and we begin to actually create a working application.
+
+The core functionality of the SBAdmin User Interface is one or more collapsible, multi-level menus which, when a bottom-level (or "leaf") menu option is clicked or tapped, causes corresponding content to appear automatically in the Content Panel.
+
+Each time a leaf menu option is clicked, the Content Panel visually changes.
+
+The *golgi-sbadmin* Component Library includes a set of Golgi Components that allow you to construct and customise the menu(s) you'll need for your application.
+
+So let's begin by constructing a simple menu, initially with a header line and a single menu option that populates the Content Panel with a simple "Hello World" display.
+
+### The *sbadmin-sidebar-menu* Component
+
+You'll normally begin by appending the *sbadmin-sidebar-menu* Component to the *sbadmin-root* Component's *sidebarTarget*.
+
+Re-edit the *js/assemblies/root_assembly.js* file as shown below:
+
+        export function load() {
+          let gx=`
+        <sbadmin-root header_bg_color="#aabbcc">
+
+          <span golgi:appendTo="topbarTarget">
+            <sbadmin-sidebar-toggle />
+            <sbadmin-brand text="Golgi SBAdmin Module Library Demonstration" color="yellow" />
+          </span>
+          
+          <sbadmin-footer-text golgi:appendTo="footerTarget" center="true">
+            Developed using the golgi-sbadmin WebComponent Library
+          </sbadmin-footer-text>
+          
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+          </sbadmin-sidebar-menu>
+
+        </sbadmin-root>
+          `;
+          return {gx};
+        };
+
+
+You can reload this version into your browser, but you'll not notice any visual changes yet: the *sbadmin-sidebar-menu* Component is simply a top-level container for all your other menu Components.
+
+### The *sbadmin-sidebar-heading* Component
+
+We can now add a top-level heading into our Menu Panel by adding an *sbadmin-sidebar-heading* Component.  Edit these lines:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+          </sbadmin-sidebar-menu>
+
+
+If you save this version of the *js/assemblies/root_assembly.js* file and reload the *index.html* file into the browser, you shoud now see our heading in the Menu Panel:
+
+![Menu Header](images/menu1.png)
+
+
+### The *sbadmin-sidebar-menu-item* Component
+
+Bottom-level, or "leaf" Menu Options are specified using the *sbadmin-sidebar-menu-item* Component.
+
+This Component can define three things:
+
+- the menu text (mandatory)
+- an icon (optional)
+- a Golgi Assembly that will be displayed in the Content Panel when the menu text is clicked or tapped.
+
+So let's add one by editing these lines in your *js/assemblies/root_assembly.js* file:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" />
+          </sbadmin-sidebar-menu>
+
+
+If you save this version of the *js/assemblies/root_assembly.js* file and reload the *index.html* file into the browser, you shoud now see our menu option in the Menu Panel:
+
+![Menu Hello World](images/menu2.png)
+
+If you try clicking the *Hello World* menu option, nothing will currently happen.  In fact if you wer to examine the browser's JavaScript Console, you'd see that it reports an error, telling you that it can't find your Golgi Assembly named *helloworld*.  That, of course, is because we haven't yet created it.
+
+### Content Panel Assemblies
+
+So far we've been defining everything in our Root Assembly file: *js/assemblies/root_assembly.js*.
+
+Content Panel Assemblies are defined in their own separate files, but held within the same folder as the Root Assembly file, since this is where we've configured Golgi to find Assemblies.
+
+Create a new file: *js/assemblies/helloworld.js*.  Let's just create something very simple to begin with:
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+          <div>Hello World!</div>
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+Notice that a Content Panel Assembly **must** define its content inside the *sbadmin-content-page* Component.
+
+This Component contains logic necessary for automatically showing and hiding itself in response to Menu Panel activity.
+
+For now we're just going to use a simple *div* tag to display the text "Hello World!".  We'll see how to create more complex Content Panel content in a later section of this tutorial.
+
+Having saved this new Assembly file, try reloading the *index.html* file into the browser (as always you may find that you need to clear the browser's cache first).
+
+When you click the "Hello World" Menu option, you should now see the next "Hello World!" appear in the Content Panel:
+
+![Content Hello World](images/menu3.png)
+
