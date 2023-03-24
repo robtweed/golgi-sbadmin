@@ -35,11 +35,12 @@ h5 {
       if (state.name) {
         this.name = state.name;
       }
-
       if (state.text) {
         this.rootElement.textContent = state.text;
       }
-
+      if (state.textContent) {
+        this.rootElement.textContent = state.textContent;
+      }
     }
 
     setText(text) {

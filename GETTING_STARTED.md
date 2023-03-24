@@ -820,6 +820,8 @@ The *golgi-sbadmin* Component Library mainly focuses on three UI devices or beha
 
 ### Cards
 
+#### Getting Started with Cards
+
 Cards are a key feature of Bootstrap 5, and *golgi-sbadmin* makes it very quick and simple to design and use them
 
 A Card is really just a visually-pleasing, rectangular container into which you can present text or graphics.
@@ -939,5 +941,56 @@ We can add as many cards we want to the Content Panel, eg:
 You should now see the following:
 
 ![Multiple Cards](images/card3.png)
+
+
+#### Card Headers and Footers
+
+You can add a header/title to a card by using the *sbadmin-card-header* tag, eg:
+
+          <sbadmin-card>
+
+            <sbadmin-card-header>My First Card</sbadmin-card-header>
+
+            <sbadmin-card-body>
+              <sbadmin-card-text>Hello World!</sbadmin-card-text>
+            </sbadmin-card-body>
+
+          </sbadmin-card>
+
+
+Similarly, you can add a footer by using the *sbadmin-card-footer* tag, eg:
+
+          <sbadmin-card>
+
+            <sbadmin-card-header>My First Card</sbadmin-card-header>
+
+            <sbadmin-card-body>
+              <sbadmin-card-text>Hello World!</sbadmin-card-text>
+            </sbadmin-card-body>
+
+            <sbadmin-card-footer>Some Footer Text</sbadmin-card-footer>
+
+          </sbadmin-card>
+
+Here's how it will look:
+
+![Card Header and Footer](images/card4.png)
+
+You can format the text in the footer using any of the styles included in the 
+[*sbadmin-card-footer* Component](/components_src/sbadmin-card-footer.mjs).  Add the one you want
+by using the *cls* attribute.
+
+For example:
+
+
+            <sbadmin-card-footer cls="text-danger">Some Footer Text</sbadmin-card-footer>
+
+You can also opt to use small text in the footer by adding the *small* attribute, eg:
+
+            <sbadmin-card-footer cls="text-danger" small="true">Some Footer Text</sbadmin-card-footer>
+
+Here's how the card will now look:
+
+![Card Header and Footer](images/card5.png)
 
 
