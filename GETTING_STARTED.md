@@ -1,6 +1,6 @@
 # Getting Started with the Golgi SBAdmin Module Library
 
-This short tutorial will show you how you can get a basic SBAdmin User Interface up and running in a few minutes.
+This tutorial will show you how you can get a basic SBAdmin User Interface up and running in a few minutes.
 
 ## Pre-Requisites
 
@@ -799,5 +799,145 @@ Let's quickly try it out:
 
 
 So that's pretty much everything you need to know to create your SBAdmin Menus.  We'll now move to creating your Content Panels.
+
+----
+
+## Creating Content Panels
+
+The main functionality of your application will take place in the Content Panel.  Each of your Content Panel Assembly files will do such things as:
+
+- determine the information you want to display to a user and how you want to present it
+- fetch, behind the scenes, data from remote resources
+- determine the interactions you want the user to make, eg entering information into forms, viewing data etc
+
+The *golgi-sbadmin* Component Library includes a set of Components that are designed for use in your Content Panels, making it quick and simple to create a modern User Interface using many of the features provided by Bootstrap.
+
+The *golgi-sbadmin* Component Library mainly focuses on three UI devices or behaviour:
+
+- cards
+- carousels
+- forms and form elements
+
+### Cards
+
+Cards are a key feature of Bootstrap 5, and *golgi-sbadmin* makes it very quick and simple to design and use them
+
+A Card is really just a visually-pleasing, rectangular container into which you can present text or graphics.
+
+A Card can have:
+
+- optionally a header
+- a body
+- optionally a footer
+
+Let's go back to the quick and simple "Hello World" Content Panel Assembly file that you created earlier, ie:
+
+
+- *js/assemblies/helloworld.js*:
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+          <div>Hello World!</div>
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+
+Let's change that to present the text in a Card rather than just by using a simple HTML *div* tag:
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+          <sbadmin-card>
+            <sbadmin-card-body>
+              <sbadmin-card-text>Hello World!</sbadmin-card-text>
+            </sbadmin-card-body>
+          </sbadmin-card>
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+You can see that we're using three *golgi-sbadmin* Components:
+
+- *sbadmin-card*: the outer container for a card
+- *sbadmin-card-body*: the container for a card's main body
+- *sbadmin-card-text*: used for formatting and presenting text to be used within a card
+
+Save this version of the *helloworld* Assembly file and try re-loading the *index.html* file.  Click on the first menu option and you should now see:
+
+![Initial Card](images/card1.png)
+
+That looks pretty good, but you'll notice the card is hard up against the SBAdmin UI's header bar.
+
+We can very simply resolve that by inserting an *sbadmin-spacer* Component before the *sbadmin-card* Component, ie:
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-body>
+              <sbadmin-card-text>Hello World!</sbadmin-card-text>
+            </sbadmin-card-body>
+          </sbadmin-card>
+
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+Now you'll see that it is much improved:
+
+![Card With Spacer](images/card2.png)
+
+We can add as many cards we want to the Content Panel, eg:
+
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-body>
+              <sbadmin-card-text>Hello World!</sbadmin-card-text>
+            </sbadmin-card-body>
+          </sbadmin-card>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-body>
+              <sbadmin-card-text>My Second Card</sbadmin-card-text>
+            </sbadmin-card-body>
+          </sbadmin-card>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-body>
+              <sbadmin-card-text>My Third Card</sbadmin-card-text>
+            </sbadmin-card-body>
+          </sbadmin-card>
+
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+
+You should now see the following:
+
+![Multiple Cards](images/card3.png)
 
 
