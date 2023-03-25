@@ -785,7 +785,7 @@ Let's quickly try it out:
 
               </sbadmin-sidebar-sub-menu>
 
-              <sbadmin-sidebar-sub-menu text="Interesting Stuff Here" iconName="github">
+              <sbadmin-sidebar-sub-menu text="Interesting Stuff Here">
                 <sbadmin-sidebar-sub-menu text="Another Level">
                   <sbadmin-sidebar-menu-item text="Fourth Option" contentPage="helloworld" />
                   <sbadmin-sidebar-menu-item text="Fifth Option" contentPage="content2" />
@@ -992,5 +992,333 @@ You can also opt to use small text in the footer by adding the *small* attribute
 Here's how the card will now look:
 
 ![Card Header and Footer](images/card5.png)
+
+----
+
+## Dynamic or Generated Content
+
+So far we've hard-coded all the content within our example application.
+
+Golgi is actually designed for dynamic applications rather than static web sites (though as you can already see, it's perfect for static web sites too!).  Golgi makes it very quick and easy to generate any or all of your application's content.
+
+Some dynamic content generation, such as generated menus, is a bit more complex to describe and beyond the scope of this tutorial, but let's take a look at the Cards that we created in the previous section, and discover how their content can be generated.
+
+### Assembly Hooks
+
+The first thing you need to learn about is what Golgi describes as Hooks.  Hooks are available to you within Golgi Assemblies.  A Hook allows you to define a function that Golgi will automatically invoke when the Component it is assigned to is rendered.  You'll usually use Hooks to either:
+
+- make your own things happen as an Assembly is being processed by Golgi
+- add or define your own customisations to the Component or, sometimes, its neighbouring Components.
+
+We'll be doing both in order to dynamically generate the content for a Card.
+
+
+
+Our Cards were being created within a Content Panel Assembly that we named "helloworld.js".  Let's remind ourselves what it contains:
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-header>My First Card</sbadmin-card-header>
+            <sbadmin-card-body>
+              <sbadmin-card-text>Hello World!</sbadmin-card-text>
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-danger" small="true">Some Footer Text</sbadmin-card-footer>
+          </sbadmin-card>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-body>
+              <sbadmin-card-text>My Second Card</sbadmin-card-text>
+            </sbadmin-card-body>
+          </sbadmin-card>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-body>
+              <sbadmin-card-text>My Third Card</sbadmin-card-text>
+            </sbadmin-card-body>
+          </sbadmin-card>
+
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+
+We're going to add a hook to this Assembly's outer-level or parent tag, ie the one that represents the *sbadmin-content-page* Component:
+
+        <sbadmin-content-page golgi:hook="configure">
+
+This instructs Golgi to invoke a hook function named *configure()* when this *sbadmin-content-page* Component is rendered within this Assembly.
+
+So now we need to define that hook function.  Edit the last lines of the Assembly file as follows:
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+              }
+            }
+          };
+
+          return {gx, hooks};
+        };
+
+You can see that hook functions are defined within an object named *hooks* that is returned by the Assembly Module along with the *gx* object.
+
+The *hooks* object contains sub-objects, identifying the Component names for which they apply.
+
+Within this Component-specific sub-object you then define the hook function(s) that need to be applied: in our case it's a function named *configure()*.
+
+We're now ready to define our specific Hook Function.
+
+
+### The *onSelected()* LifeCycle Method
+
+The *golgi-sbadmin* Component Library implements a mechanism whereby any time you click or tap a "leaf" menu option in the Menu Panel and therefore bring into view a Content Panel Assembly, Golgi will attempt to invoke a custom LifeCycle method for that Content Panel Assembly's *sbadmin-content-page* Component - that method is named *onSelected()*.  
+
+By default, the *sbadmin-content-page* Component does not include an onSelected() method within it, but an Assembly Hook allows you to add it, so that by the time the *onSelected()* method is invoked, it's already there.
+
+So let's try that out:
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+                this.onSelected = function() {
+                  console.log('helloworld selected');
+                }
+              }
+            }
+          };
+
+Within an Assembly Hook method, *this* refers to the Hook's host Component - ie the instance of the *sbadmin-content-page* Component in our *helloworld.js* Content Panel Assembly. So we simply create *this.onSelected*.
+
+Notice that all we're initially going to do is display some text in the browser's JavaScript console whenever *this.onSelected()* is invoked.
+
+Save this new version of your *helloworld.js* file and reload the application's *index.html* file into the browser.  Open the browser's JavaScript Console.
+
+You should now see *helloworld selected* appearing in the Console every time you click the Hello World menu option in the Menu Panel.
+
+We now have an event handler that we can use for dynamically populating any of the cards within the *helloworld.js* Assembly.
+
+
+### Using a Golgi State-Map to Populate Cards
+
+One way in which we could populate the Cards within the *helloworld.js* Assembly would be to add lots of other hooks and add event handlers that are triggered by the top-level *onSelected() method that we previously created.  
+
+However that's a messy and potentially error-prone approach and also tricky to scale if we have lots of cards to display.
+
+Instead, we can use a very slick and deceptively simple alternative method that is built-in to Golgi: we can use what's known as a Golgi State-Map.  This is actually based around a proxy object named *golgi_state* that is maintained and handled by Golgi.  Every Golgi Component has access to it via *this.golgi_state*.
+
+Components can be designed to work with *golgi_state*, but by default this hasn't been implemented within the *golgi-sbadmin* Components.
+
+However, you can customise Components yourself to use *golgi_state* from within your Assemblies.
+
+Let's try it out with the first of the Cards we defined in the *helloworld.js* Assembly, ie in here:
+
+          <sbadmin-card>
+            <sbadmin-card-header>My First Card</sbadmin-card-header>
+            <sbadmin-card-body>
+              <sbadmin-card-text>Hello World!</sbadmin-card-text>
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-danger" small="true">Some Footer Text</sbadmin-card-footer>
+          </sbadmin-card>
+
+Change the *sbadmin-card-text* tag to this:
+
+              <sbadmin-card-text golgi:stateMap="card1:text" />
+
+The *golgi:stateMap* attribute defines a mapping between the Component instance and the *golgi_state* object.  The value defines two data items separated by a colon:
+
+- the golgi_state property that holds the value needed for this Component
+- the state name or method name within the Component with which to apply that value
+
+So what we're telling Golgi in our example is:
+
+- Look for a property in *golgi_state* named *card1*, ie *this.golgi_state.card1*
+- If it exists, then if the Component has a *setState* method, set *state.text* to the value in *this.golgi_state.card1*
+- Alternatively, invoke a Component Method named *text()* and pass in the value of *this.golgi_state.card1* into it as its argument.
+
+If you take a look at the definition of the [*sbadmin-card-text*](/components_src/sbadmin-card-text.mjs) Component, you'll see that it has a *setState()* method that includes processing of a state property named *text*, ie:
+
+        methods: `
+          setState(state) {
+            if (state.name) {
+              this.name = state.name;
+            }
+
+            if (state.text) {
+              this.rootElement.textContent = state.text;
+            }
+            ... etc
+
+So in our case, that's what Golgi will use for our Golgi State-Map definition.
+
+OK so now it's time to make that work.  Find the *hook* that we defined previously, ie:
+
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+                this.onSelected = function() {
+                  console.log('helloworld selected');
+                }
+              }
+            }
+          };
+
+and now change it to something like this:
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+                this.onSelected = function() {
+                  this.golgi_state.card1 = 'Card content created at ' + Date.now();
+                }
+              }
+            }
+          };
+
+We're adding the value of *Date.now()* so we can confirm whether or not it is invoked every time you click the associated menu item.
+
+Save these changes and try it out again.
+
+You should now see something like this when you click the first Menu Option:
+
+
+![State Mapping](images/statemap1.png)
+
+And every time you click the first Menu Option, the value of *Date.now()* should change.
+
+So basically every time you change the value of *this.golgi_state.card1*, the text in the mapped Component will now automatically update!
+
+
+There's another way we could have implemented this.  If you look at the
+definition of the [*sbadmin-card-text*](/components_src/sbadmin-card-text.mjs) Component,
+you'll also notice that it also has a method named *setText()*.  It's a little more complex than the
+*state.text* handler, as it's designed to also cater for use of Markdown-formatted text.  However, in our
+situation, using unformatted text, it should behave the same as the *state.text* handler.
+
+So, we could do the Golgi State-Mapping like this:
+
+
+              <sbadmin-card-text golgi:stateMap="card1:setText" />
+
+Because the *sbadmin-card-text* Component has a method named *setText()*, then Golgi will invoke it and pass it the value of *this.golgi_state.card1*.
+
+Whether you use a state property or a method in your Golgi State Mappings is up to you and your personal taste.
+
+You can now try doing similar things to dynamically populate the header and footer of the first card, and also to populate the other cards, eg:
+
+          <sbadmin-card>
+            <sbadmin-card-header golgi:stateMap="card1.header:text" />
+            <sbadmin-card-body>
+              <sbadmin-card-text golgi:stateMap="card1.body:text" />
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-danger" small="true" golgi:stateMap="card1.footer:text" />
+          </sbadmin-card>
+
+
+Note the way we can define a path for the State Map, so we can use a single state object - *card1* and use sub-properties within it for the header, body and footer respectively.
+
+So when it comes to populating these values, we now just need to do this:
+
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+                this.onSelected = function() {
+                  this.golgi_state.card1 = {
+                    header: 'Card 1 Header',
+                    body: 'Card 1 Body at ' + Date.now(),
+                    footer: 'Card 1 Footer'
+                  };
+                }
+              }
+            }
+          };
+
+
+So let's create dynamic content for all three of our cards.  Here's the final version of the *helloworld.js* Assembly:
+
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page golgi:hook="configure">
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-header golgi:stateMap="card1.header:text" />
+            <sbadmin-card-body>
+              <sbadmin-card-text golgi:stateMap="card1.body:text" />
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-danger" small="true" golgi:stateMap="card1.footer:text" />
+          </sbadmin-card>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-header golgi:stateMap="card2.header:text" />
+            <sbadmin-card-body>
+              <sbadmin-card-text golgi:stateMap="card2.body:text" />
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-success" small="true" golgi:stateMap="card2.footer:text" />
+          </sbadmin-card>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-header golgi:stateMap="card3.header:text" />
+            <sbadmin-card-body>
+              <sbadmin-card-text golgi:stateMap="card3.body:text" />
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-info" small="true" golgi:stateMap="card3.footer:text" />
+          </sbadmin-card>
+
+        </sbadmin-content-page>
+          `;
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+                this.onSelected = function() {
+                  this.golgi_state.card1 = {
+                    header: 'Card 1 Header',
+                    body: 'Card 1 Body at ' + Date.now(),
+                    footer: 'Card 1 Footer'
+                  };
+                  this.golgi_state.card2 = {
+                    header: 'Card 2 Header',
+                    body: 'Card 2 Body at ' + Date.now(),
+                    footer: 'Card 2 Footer'
+                  };
+                  this.golgi_state.card3 = {
+                    header: 'Card 3 Header',
+                    body: 'Card 3 Body at ' + Date.now(),
+                    footer: 'Card 3 Footer'
+                  };
+                }
+              }
+            }
+          };
+
+          return {gx, hooks};
+        };
+
+Save this and reload the application into the browser in the usual way, and you should now see something like this when you click the first Menu Option:
+
+![State Mapping 2](images/statemap1.png)
+
+
+Of course, we've hard-coded the values that are populating the *golgi_state* object, but our *onSelected()* method could, instead, send one or more REST requests to a remote resource to fetch the values used in *golgi_state*.
+
 
 

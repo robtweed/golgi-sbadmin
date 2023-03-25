@@ -130,10 +130,10 @@ let def = {
       }
 
       if (state.text) {
-        this.rootElement.textContent = state.text;
+        this.setText(state.text);
       }
       if (state.textContent) {
-        this.rootElement.textContent = state.textContent;
+        this.setText(state.textContent);
       }
       if (state.muted) {
         this.rootElement.classList.add('text-muted');
@@ -160,6 +160,7 @@ let def = {
           el.classList.remove('text-muted');
           el.classList.add(state.cls);
         }
+        this.textElement = el;
       }
 
 
@@ -167,7 +168,12 @@ let def = {
     }
 
     setText(text) {
-      this.rootElement.textContent = text;
+      if (this.textElement) {
+        this.textElement.textContent = text;
+      }
+      else {
+        this.rootElement.textContent = text;
+      }
     }
 
   `
