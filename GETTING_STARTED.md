@@ -1315,7 +1315,7 @@ So let's create dynamic content for all three of our cards.  Here's the final ve
 
 Save this and reload the application into the browser in the usual way, and you should now see something like this when you click the first Menu Option:
 
-![State Mapping 2](images/statemap1.png)
+![State Mapping 2](images/statemap2.png)
 
 
 Of course, we've hard-coded the values that are populating the *golgi_state* object, but our *onSelected()* method could, instead, send one or more REST requests to a remote resource to fetch the values used in *golgi_state*.
