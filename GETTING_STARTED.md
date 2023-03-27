@@ -1321,4 +1321,69 @@ Save this and reload the application into the browser in the usual way, and you 
 Of course, we've hard-coded the values that are populating the *golgi_state* object, but our *onSelected()* method could, instead, send one or more REST requests to a remote resource to fetch the values used in *golgi_state*.
 
 
+### Populating Content Panel Assemblies Just Once On Initial Rendering
+
+The previous example has demonstrated how to update and repopulate the contents of the Cards within our *helloworld* Content Panel Assembly every time its associated menu option was clicked or tapped.
+
+Sometimes, however, you might want to populate the Cards just once, ie when you first clicked or tapped its associated menu option, and leave it alone on each successive menu click.  Let's take a look a how this can be achieved instead.
+
+It's really a matter of changing event handlers: currently we're adding the *onSelected()* event handler to the *sbadmin-content-page* Component which will be automatically fired every time the associated menu option is clicked.:
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+                this.onSelected = function() {
+                  this.golgi_state.card1 = {
+                    header: 'Card 1 Header',
+                    body: 'Card 1 Body at ' + Date.now(),
+                    footer: 'Card 1 Footer'
+                  };
+                  this.golgi_state.card2 = {
+                    header: 'Card 2 Header',
+                    body: 'Card 2 Body at ' + Date.now(),
+                    footer: 'Card 2 Footer'
+                  };
+                  this.golgi_state.card3 = {
+                    header: 'Card 3 Header',
+                    body: 'Card 3 Body at ' + Date.now(),
+                    footer: 'Card 3 Footer'
+                  };
+                }
+              }
+            }
+          };
+
+
+Whenever an Assembly has completed being rendered, Golgi emits an event that can be detected by any Component within that Assembly via its *onOwnerAssemblyRendered()* handler.  This is fired only once, after the entire Assembly and all its constituent Components have been fully rendered within the browser.
+
+So we can make use of this like so:
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  this.golgi_state.card1 = {
+                    header: 'Card 1 Header',
+                    body: 'Card 1 Body at ' + Date.now(),
+                    footer: 'Card 1 Footer'
+                  };
+                  this.golgi_state.card2 = {
+                    header: 'Card 2 Header',
+                    body: 'Card 2 Body at ' + Date.now(),
+                    footer: 'Card 2 Footer'
+                  };
+                  this.golgi_state.card3 = {
+                    header: 'Card 3 Header',
+                    body: 'Card 3 Body at ' + Date.now(),
+                    footer: 'Card 3 Footer'
+                  };
+                });
+              }
+            }
+          };
+
+
+Note that the *this* context within the *onOwnerAssemblyRendered()* handler is the Component that is invoking it.
+
+Save this version of the *helloworld.js* Assembly and try re-loading and re-running the example application.  You should now find that the Cards are populated when the menu option is first selected, but their content is subsequently unchanged on successive menu clicks.
 
