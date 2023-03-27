@@ -1,5 +1,45 @@
 # Getting Started with the Golgi SBAdmin Module Library
 
+## Index
+
+- [Pre-Requisites](#pre-requisites)
+- [Recommended File System Folder Structure](#recommended-file-system-folder-structure)
+  - [index.html](#indexhtml)
+  - [app.js](#appjs)
+  - [root_assembly.js](#root_assemblyjs)
+- [Try It Out](#try-it-out)
+- [First Steps in Controlling the SBAdmin User Interface](#first-steps-in-controlling-the-sbadmin-user-interface)
+  - [Append Targets](#append-targets)
+  - [Panel Colours](#panel-colours)
+    - [Background Colours](#background-colours)
+    - [Text Colours](#text-colours)
+- [Customising the SBAdmin Header Panel](#customising-the-sbadmin-header-panel)
+  -[Adding Header Panel Text](#adding-header-panel-text)
+  -[Adding The Sidebar Toggle Device](#adding-the sidebar-toggle-device)
+- [Customising the SBAdmin Footer Panel](#customising-the-sbadmin-footer-panel)
+- [Customising the SBAdmin Menu Panel](#customising-the-sbadmin-menu-panel)
+  - [The *sbadmin-sidebar-menu* Component](#the-sbadmin-sidebar-menu-component)
+  - [The *sbadmin-sidebar-heading* Component](#the-sbadmin-sidebar-heading-component)
+  - [The *sbadmin-sidebar-menu-item* Component](#the-sbadmin-sidebar-menu-item-component)
+  - [Content Panel Assemblies](#content-panel-assemblies)
+  - [Menu Icons](#menu-icons)
+  - [Multiple Menu Options](#multiple-menu-options)
+    - [*js/assemblies/content2.js*](#jsassembliescontent2js)
+    - [*js/assemblies/content3.js*](#jsassembliescontent3js)
+  - [Specifying A Default Menu Option](#specifying-a-default-menu-option)
+  - [Multi-level Menus](#multi-level-menus)
+  - [Multi-level Sub-Menus](#multi-level-sub-menus)
+- [Creating Content Panels](#creating-content-panels)
+  - [Cards](#cards)
+    - [Getting Started with Cards](#getting-started-with-cards)
+    - [Card Headers and Footers](#card-headers-and-footers)
+-   [Dynamic or Generated Content](#dynamic-or-generated-content)
+    - [Assembly Hooks](#assembly-hooks)
+    - [The *onSelected()* LifeCycle Method](#the-onselected-lifecycle-method)
+    - [Using a Golgi State-Map to Populate Cards](#using-a-golgi-state-map-to-populate-cards)
+    - [Populating Content Panel Assemblies Just Once On Initial Rendering](#populating-content-panel-assemblies-just-once-on-initial-rendering)
+
+
 This tutorial will show you how you can get a basic SBAdmin User Interface up and running in a few minutes.
 
 ## Pre-Requisites
@@ -995,7 +1035,7 @@ Here's how the card will now look:
 
 ----
 
-## Dynamic or Generated Content
+### Dynamic or Generated Content
 
 So far we've hard-coded all the content within our example application.
 
@@ -1003,7 +1043,7 @@ Golgi is actually designed for dynamic applications rather than static web sites
 
 Some dynamic content generation, such as generated menus, is a bit more complex to describe and beyond the scope of this tutorial, but let's take a look at the Cards that we created in the previous section, and discover how their content can be generated.
 
-### Assembly Hooks
+#### Assembly Hooks
 
 The first thing you need to learn about is what Golgi describes as Hooks.  Hooks are available to you within Golgi Assemblies.  A Hook allows you to define a function that Golgi will automatically invoke when the Component it is assigned to is rendered.  You'll usually use Hooks to either:
 
@@ -1080,7 +1120,7 @@ Within this Component-specific sub-object you then define the hook function(s) t
 We're now ready to define our specific Hook Function.
 
 
-### The *onSelected()* LifeCycle Method
+#### The *onSelected()* LifeCycle Method
 
 The *golgi-sbadmin* Component Library implements a mechanism whereby any time you click or tap a "leaf" menu option in the Menu Panel and therefore bring into view a Content Panel Assembly, Golgi will attempt to invoke a custom LifeCycle method for that Content Panel Assembly's *sbadmin-content-page* Component - that method is named *onSelected()*.  
 
@@ -1109,7 +1149,7 @@ You should now see *helloworld selected* appearing in the Console every time you
 We now have an event handler that we can use for dynamically populating any of the cards within the *helloworld.js* Assembly.
 
 
-### Using a Golgi State-Map to Populate Cards
+#### Using a Golgi State-Map to Populate Cards
 
 One way in which we could populate the Cards within the *helloworld.js* Assembly would be to add lots of other hooks and add event handlers that are triggered by the top-level *onSelected() method that we previously created.  
 
@@ -1321,7 +1361,7 @@ Save this and reload the application into the browser in the usual way, and you 
 Of course, we've hard-coded the values that are populating the *golgi_state* object, but our *onSelected()* method could, instead, send one or more REST requests to a remote resource to fetch the values used in *golgi_state*.
 
 
-### Populating Content Panel Assemblies Just Once On Initial Rendering
+#### Populating Content Panel Assemblies Just Once On Initial Rendering
 
 The previous example has demonstrated how to update and repopulate the contents of the Cards within our *helloworld* Content Panel Assembly every time its associated menu option was clicked or tapped.
 
