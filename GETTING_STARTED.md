@@ -33,11 +33,13 @@
   - [Cards](#cards)
     - [Getting Started with Cards](#getting-started-with-cards)
     - [Card Headers and Footers](#card-headers-and-footers)
--   [Dynamic or Generated Content](#dynamic-or-generated-content)
+  - [Dynamic or Generated Content](#dynamic-or-generated-content)
     - [Assembly Hooks](#assembly-hooks)
     - [The *onSelected()* LifeCycle Method](#the-onselected-lifecycle-method)
     - [Using a Golgi State-Map to Populate Cards](#using-a-golgi-state-map-to-populate-cards)
     - [Populating Content Panel Assemblies Just Once On Initial Rendering](#populating-content-panel-assemblies-just-once-on-initial-rendering)
+  - [Carousels](#carousels)
+
 
 
 This tutorial will show you how you can get a basic SBAdmin User Interface up and running in a few minutes.
@@ -1426,4 +1428,182 @@ So we can make use of this like so:
 Note that the *this* context within the *onOwnerAssemblyRendered()* handler is the Component that is invoking it.
 
 Save this version of the *helloworld.js* Assembly and try re-loading and re-running the example application.  You should now find that the Cards are populated when the menu option is first selected, but their content is subsequently unchanged on successive menu clicks.
+
+----
+
+### Carousels
+
+In our example so far, we've created a stack of Cards the are displayed in our Content Panel one on top of the other.
+
+An alternative approach to displaying multiple Cards is to wrap them inside a Carousel device, so that each one is displayed individually, and you can navigate to the next or previous Card by clicking an arrow or swiping on a mobile device.  The carousel automatically provides a rolling cycle from the Cards: selecting the Next Card when viewing the last Card in the deck will bring the first Card back into view.
+
+Creating a Carousel is made very simple with the *golgi-sbadmin* Component Library:
+
+- add an *sbadmin-carousel* tag which creates the Carousel container
+- inside the *sbadmin-carousel* tag, specify each Carousel item using an *sbadmin-carousel-item* tag.  
+
+You can put anything inside an *sbadmin-carousel-item* tag, but I'd recommend you use one or more Cards.
+
+So let's modify our previous example of stacked cards to display each one in a Carousel instead.
+
+Edit the */assemblies/helloworld.js* Assembly file to look like this:
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page golgi:hook="configure">
+
+          <sbadmin-spacer />
+
+          <sbadmin-carousel>
+
+            <sbadmin-carousel-item active="true">
+
+              <sbadmin-card>
+                <sbadmin-card-header golgi:stateMap="card1.header:text" />
+                <sbadmin-card-body>
+                  <sbadmin-card-text golgi:stateMap="card1.body:text" />
+                </sbadmin-card-body>
+                <sbadmin-card-footer cls="text-danger" small="true" golgi:stateMap="card1.footer:text" />
+              </sbadmin-card>
+              
+            </sbadmin-carousel-item>
+            
+            <sbadmin-carousel-item>              
+              
+              <sbadmin-card>
+                <sbadmin-card-header golgi:stateMap="card2.header:text" />
+                <sbadmin-card-body>
+                  <sbadmin-card-text golgi:stateMap="card2.body:text" />
+                </sbadmin-card-body>
+                <sbadmin-card-footer cls="text-success" small="true" golgi:stateMap="card2.footer:text" />
+              </sbadmin-card>
+              
+            </sbadmin-carousel-item>
+            
+            <sbadmin-carousel-item>  
+
+              <sbadmin-card>
+                <sbadmin-card-header golgi:stateMap="card3.header:text" />
+                <sbadmin-card-body>
+                  <sbadmin-card-text golgi:stateMap="card3.body:text" />
+                </sbadmin-card-body>
+                <sbadmin-card-footer cls="text-info" small="true" golgi:stateMap="card3.footer:text" />
+              </sbadmin-card>
+              
+            </sbadmin-carousel-item>
+            
+          </sbadmin-carousel>
+
+        </sbadmin-content-page>
+          `;
+
+          let hooks = {
+            'sbadmin-content-page': {
+              configure: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  this.golgi_state.card1 = {
+                    header: 'Card 1 Header',
+                    body: 'Card 1 Body at ' + Date.now(),
+                    footer: 'Card 1 Footer'
+                  };
+                  this.golgi_state.card2 = {
+                    header: 'Card 2 Header',
+                    body: 'Card 2 Body at ' + Date.now(),
+                    footer: 'Card 2 Footer'
+                  };
+                  this.golgi_state.card3 = {
+                    header: 'Card 3 Header',
+                    body: 'Card 3 Body at ' + Date.now(),
+                    footer: 'Card 3 Footer'
+                  };
+                });
+              }
+            }
+          };
+
+          return {gx, hooks};
+        };
+
+
+So all we've really done is wrap each of the Card's we'd previously created inside an *sbadmin-carousel-item* tag, and put them all inside an *sbadmin-carousel* tag.  All the rest of the logic remains the same as before.
+
+We also removed the *sbadmin-spacer* tag from between each Card, as it's no longer needed (though we have one at the very top above the *sbadmin-carousel* tag.
+
+Save this version and try it out.
+
+When you select the Hello World Menu Option, you'll see this:
+
+![Carousel 1](images/carousel1.png)
+
+So you have a working carousel, but it doesn't look great: the navigation controls are covered by the card itself.
+
+This is because, by default, Cards are automatically sized to fill the available width of the Content Panel.
+
+We can fix this by specifying a width for each of the cards, to use, say, 70% of the available space.  In doing so, we also need to center them.
+
+You can specify a card width by using the *width* attribute.  This can specify either a percentage, eg:
+
+        width="70%"
+
+or it can specify one of the *w-* style classes that are included in the 
+[*sbadmin-card* Component](/components_src/sbadmin-card.mjs), eg:
+
+        width="75"     // This will add the style "w-75"
+
+To center the cards, use the attribute:
+
+        position="center"
+
+
+So let's change our cards as follows:
+
+
+          <sbadmin-carousel>
+
+            <sbadmin-carousel-item active="true">
+
+              <sbadmin-card width="75" position="center">
+                <sbadmin-card-header golgi:stateMap="card1.header:text" />
+                <sbadmin-card-body>
+                  <sbadmin-card-text golgi:stateMap="card1.body:text" />
+                </sbadmin-card-body>
+                <sbadmin-card-footer cls="text-danger" small="true" golgi:stateMap="card1.footer:text" />
+              </sbadmin-card>
+              
+            </sbadmin-carousel-item>
+            
+            <sbadmin-carousel-item>              
+              
+              <sbadmin-card width="75" position="center">
+                <sbadmin-card-header golgi:stateMap="card2.header:text" />
+                <sbadmin-card-body>
+                  <sbadmin-card-text golgi:stateMap="card2.body:text" />
+                </sbadmin-card-body>
+                <sbadmin-card-footer cls="text-success" small="true" golgi:stateMap="card2.footer:text" />
+              </sbadmin-card>
+              
+            </sbadmin-carousel-item>
+            
+            <sbadmin-carousel-item>  
+
+              <sbadmin-card width="75" position="center">
+                <sbadmin-card-header golgi:stateMap="card3.header:text" />
+                <sbadmin-card-body>
+                  <sbadmin-card-text golgi:stateMap="card3.body:text" />
+                </sbadmin-card-body>
+                <sbadmin-card-footer cls="text-info" small="true" golgi:stateMap="card3.footer:text" />
+              </sbadmin-card>
+              
+            </sbadmin-carousel-item>
+            
+          </sbadmin-carousel>
+
+
+Save the Assembly file and reload the application in the browser, and now the Cards should look much better:
+
+![Carousel 2](images/carousel2.png)
+
+---
+
+
 

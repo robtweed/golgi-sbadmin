@@ -267,11 +267,6 @@ div {
         this.name = state.name;
       }
 
-      if (state.widthStyle) {
-        let style = '';
-        if (this.rootElement.getAttribute('style')) style = this.rootElement.getAttribute('style');
-        this.rootElement.setAttribute('style', style + 'width: ' + state.widthStyle + ';');
-      }
       if (state.textColor) {
         if (this.allowedColors.includes(state.textColor)) {
           let cls = 'text-' + state.textColor;
@@ -306,7 +301,14 @@ div {
         this.rootElement.classList.add('h-100');
       }
       if (state.width) {
-        this.rootElement.classList.add('w-' + state.width);
+        if (state.width.toString().includes('%')) {
+          let style = '';
+          if (this.rootElement.getAttribute('style')) style = this.rootElement.getAttribute('style');
+          this.rootElement.setAttribute('style', style + 'width: ' + state.width + ';');
+        }
+        else {
+          this.rootElement.classList.add('w-' + state.width);
+        }
       }
       if (state.textAlign) {
         if (state.textAlign === 'center') {
