@@ -39,6 +39,7 @@
     - [Using a Golgi State-Map to Populate Cards](#using-a-golgi-state-map-to-populate-cards)
     - [Populating Content Panel Assemblies Just Once On Initial Rendering](#populating-content-panel-assemblies-just-once-on-initial-rendering)
   - [Carousels](#carousels)
+  - [Forms](#forms)
 
 
 
@@ -1604,6 +1605,317 @@ Save the Assembly file and reload the application in the browser, and now the Ca
 ![Carousel 2](images/carousel2.png)
 
 ---
+
+### Forms
+
+The last part of this tutorial will focus on how to create and use Forms within your *golgi-sbadmin* application.
+
+The *golgi-sbadmin* Component Library includes a complete set of appropriately-styled and automated Form Elements that you can use within your Content Panels.
+
+Let's do this within its own dedicated Content Panel Assembly.  First, we'll edit the menu in the Menu Panel, so re-edit the */assemblies/root_assembly.js* file and find these tags:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+            <sbadmin-sidebar-menu-item text="Second Option" contentPage="content2" />
+            <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+
+We'll change that second menu tag:
+
+          <sbadmin-sidebar-menu golgi:appendTo="sidebarTarget">
+            <sbadmin-sidebar-heading text="Menu Demo" />
+            <sbadmin-sidebar-menu-item text="Hello World" contentPage="helloworld" iconName="globe" />
+            <sbadmin-sidebar-menu-item text="Form Demo" contentPage="formdemo" />
+            <sbadmin-sidebar-menu-item text="Third Option" contentPage="content3" />
+
+
+Save this updated version of the *root_assembly.js* file, and now create a new file named *formdemo.js* in your */assemblies* folder:
+
+#### */assemblies/formdemo.js*
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-header text="Form Demo" />
+            <sbadmin-card-body>
+
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-danger" small="true" text="Form Demo" />
+          </sbadmin-card>
+           
+        </sbadmin-content-page>
+          `;
+
+          return {gx};
+        };
+
+
+So that creates for us a new empty Card that will display in the Content Panel every time the "Form Demo" menu option is clicked.
+
+#### Creating a Form
+
+Now we'll create a form within the card body.
+
+Always use an *sbadmin-form* tag as a container for each of your forms.  You'll see why this is important later.  Edit this part of your *formdemo.js* Assembly file:
+
+          <sbadmin-card>
+            <sbadmin-card-header text="Form Demo" />
+            <sbadmin-card-body>
+
+              <sbadmin-form>
+              </sbadmin-form>
+
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-danger" small="true" text="Form Demo" />
+          </sbadmin-card>
+
+We can now add a standard HTML *fieldset* tag to group all our field elements:
+
+          <sbadmin-card>
+            <sbadmin-card-header text="Form Demo" />
+            <sbadmin-card-body>
+
+              <sbadmin-form>
+                <fieldset>
+                </fieldset>
+              </sbadmin-form>
+
+            </sbadmin-card-body>
+            <sbadmin-card-footer cls="text-danger" small="true" text="Form Demo" />
+          </sbadmin-card>
+
+
+
+
+We're now ready to start adding fields to the form.  
+
+
+#### Text Input Form Element
+
+Let's start with an easy form element: the standard text element.
+
+You specify it using the *sbadmin-input* tag and, like a standard HTML *input* tag, we specify *type="text"* as an attribute.
+
+We must give it a name (using the *name* attribute): you'll see why later.
+
+You can also specify a label, by using the *label* attribute.  Try this:
+
+              <sbadmin-form>
+                <fieldset>
+                  <sbadmin-input type="text" label="Enter Your Name" name="yourname" />
+                </fieldset>
+              </sbadmin-form>
+
+Save this version of the *formdemo.js* Assembly, reload the application into the browser and click the *Form Demo* menu option. You should see this:
+
+
+![Forms 1](images/form1.png)
+
+Most of the standard form input tag attributes are also available to you, so, for example, we can add a *placeholder* attribute:
+
+        <sbadmin-input type="text" label="Enter Your Name" name="yourname" placeholder="Your Name..." />
+
+
+#### *golgi-sbadmin* Form Element Automation
+
+The usual purpose of a set of Form Elements is to allow the user to interact with them and to specify a set of values that are ultimately sent to a remote service for processing.  In order to do this, it is common practice to have to marshall the values entered by the user before being able to send them to the remote service.
+
+The *golgi-sbadmin* Form Elements perform that mashalling automatically for you, and do so in a way that is appropriate for the type of Form Element.  This makes things very straightforward for you!
+
+To see how this works and how we can make use of this automation, we're going to add a button which, when clicked, allows us to access and see the automatically marshalled data.
+
+
+#### Adding a Button
+
+The most common way by which the process of sending Form data to a remote service is initiated is via a button.
+
+The *golgi-sbadmin* Component Library includes an *sbadmin-button* Component that we can use for all sorts of purposes, including the submission of form data.
+
+Let's add one to our form:
+
+              <sbadmin-form>
+                <fieldset>
+                  <sbadmin-input type="text" label="Enter Your Name" name="yourname" placeholder="Your Name..." />
+                </fieldset>
+
+                <sbadmin-spacer />
+                <sbadmin-button color="blue" text="View Form Data" />
+                <sbadmin-spacer />
+              </sbadmin-form>
+
+
+if you save this and reload the application, you'll now see a blue button at the bottom-left of the form:
+
+![Forms 2](images/form2.png)
+
+That button is perhaps a little large, and we might decide to place it on the right-hand side instead.  We can do this by adding the following attributes to the *sbadmin-button* tag:
+
+          <sbadmin-button color="blue" text="View Form Data" size="small" position="right" />
+
+
+#### Adding A Button Click Event Handler
+
+The next thing we need to do is to add an event handler that is triggered every time the button is clicked.
+
+We can do that by specifying a hook for the *sbadmin-button* tag:
+
+          <sbadmin-button color="blue" text="View Form Data" size="small" position="right" golgi:hook="configure" />
+
+and add the hook function to the Assembly:
+
+          let hooks = {
+            'sbadmin-button': {
+              configure: function() {
+
+              }
+            }
+          };
+
+
+Remember to return the *hooks* object along with the *gx* object at the end of the Assembly:
+
+          return {gx, hooks};
+
+
+So let's think about what we want to do.  We want to create an event handler that is fired on every click of the button.  The *sbadmin-button* Component provides us with the means to do this: it emits an event named *clicked* when the button is clicked, so we can harness that by using the *on()* function that is available in every Component:
+
+
+          let hooks = {
+            'sbadmin-button': {
+              configure: function() {
+                this.on('clicked', function() {
+                  console.log('button clicked!');
+                });
+
+              }
+            }
+          };
+
+
+#### Examining the Automatically-Marshalled Form Data
+
+Now we want to examine the automatically-marshalled form data.  The way this works behind the scenes is that every *golgi-sbadmin* Form Element automatically adds any value(s) entered by a user to an object within the parent *sbadmin-form* Component.  This happens automatically behind the scenes.
+
+The *sbadmin-form* Component includes a built-in getter method - *values* - which returns the array of marshalled values from that object.
+
+So let's access that.
+
+To make things a little easier, you'll have notice that I added the *sbadmin-button* tag within the *sbadmin-form* tag.  I didn't need to do that, but by doing so, I can easily access the *sbadmin-form* Component from the *sbadmin-button* Component by using the *getParentComponent()* method that all Golgi Components include:
+
+
+          let form = this.getParentComponent('sbadmin-form');
+
+So now we can invoke the form Component's *values* getter method.  Let's put that all together:
+
+
+          let hooks = {
+            'sbadmin-button': {
+              configure: function() {
+                let form = this.getParentComponent('sbadmin-form');
+                this.on('clicked', function() {
+                  console.log(form.values);
+                });
+
+              }
+            }
+          };
+
+
+#### Displaying the Form Data in the Card Footer
+
+Now, rather than having to use the browser's JavaScript console to view the marshalled form values, let's display them in the footer of the Card we're using.
+
+So let's add a Golgi State Map to the footer:
+
+            <sbadmin-card-footer small="true" golgi:stateMap="formcard.footer:text" />
+
+and now we can write the form values there by simply setting the value into the *golgi_state* object:
+
+          let hooks = {
+            'sbadmin-button': {
+              configure: function() {
+                let form = this.getParentComponent('sbadmin-form');
+                this.on('clicked', function() {
+                  form.golgi_state.formcard = {footer: JSON.stringify(form.values)};
+                });
+
+              }
+            }
+          };
+
+
+#### Try it Out
+
+OK let's try that out. To summarise, here's what the latest version of the *formdemo.js* Assembly should look like:
+
+        export function load() {
+          let gx=`
+        <sbadmin-content-page>
+
+          <sbadmin-spacer />
+
+          <sbadmin-card>
+            <sbadmin-card-header text="Form Demo" />
+            <sbadmin-card-body>
+
+              <sbadmin-form>
+                <fieldset>
+                  <sbadmin-input type="text" label="Enter Your Name" name="yourname" placeholder="Your Name..." />
+                </fieldset>
+
+
+                <sbadmin-spacer />
+                <sbadmin-button color="blue" text="View Form Data" size="small" position="right" golgi:hook="configure" />
+                <sbadmin-spacer />
+              </sbadmin-form>
+
+            </sbadmin-card-body>
+            <sbadmin-card-footer small="true" golgi:stateMap="formcard.footer:text" />
+          </sbadmin-card>
+           
+        </sbadmin-content-page>
+          `;
+
+          let hooks = {
+            'sbadmin-button': {
+              configure: function() {
+                let form = this.getParentComponent('sbadmin-form');
+                this.on('clicked', function() {
+                  form.golgi_state.formcard = {footer: JSON.stringify(form.values)};
+                });
+
+              }
+            }
+          }
+
+          return {gx, hooks};
+        };
+
+Save this and reload the application into the browser.  Click the *Form Demo* menu option, enter some text into the name field and click the button.  You should see something like this:
+
+![Forms 3](images/form3.png)
+
+So you can see that *form.values* returns an array, with each member containing the name and value(s) for its associated element.
+
+In our example thus far, we only have the one form element and we specified its name to be *yourname* and I entered *Rob* into the field.  As a result, *form.values* contains:
+
+        [
+          {
+            "name":"yourname",
+            "value":"Rob"
+          }
+        ]
+
+Try changing the value in the text field and click the button again.  You'll see that the new value is now returned by *form.values*.
+
+----
+
+
+
 
 
 

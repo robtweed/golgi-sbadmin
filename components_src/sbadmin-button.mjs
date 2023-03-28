@@ -2062,6 +2062,25 @@ button:focus:not(:focus-visible) {
   font-size: 0.75rem;
   border-radius: 0.25rem;
 }
+
+.float-start {
+  display: block;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.float-end {
+  display: block;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.float-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 *, ::before, ::after {
     box-sizing: border-box;
 }
@@ -2076,10 +2095,26 @@ button:focus:not(:focus-visible) {
       if (state.name) {
         this.name = state.name;
       }
+      if (state.position === 'right') {
+        this.button.classList.add('float-end');
+      }
+      if (state.position === 'left') {
+        this.button.classList.add('float-start');
+      }
+      if (state.position === 'center') {
+        this.button.classList.add('float-center');
+      }
+      if (state.size === 'small') {
+        this.button.classList.add('btn-sm');
+      }
+      if (state.size === 'large') {
+        this.button.classList.add('btn-lg');
+      }
       if (state.cls) {
         let clsArr = state.cls.split(' ');
+        let _this = this;
         clsArr.forEach(function(cl) {
-          this.button.classList.add(cl);
+          _this.button.classList.add(cl);
         });
       }
       if (state.color) {
@@ -2087,6 +2122,9 @@ button:focus:not(:focus-visible) {
       }
       if (state.text) {
         this.button.textContent = state.text;
+      }
+      if (state.textContent) {
+        this.button.textContent = state.textContent;
       }
       if (state.disabled) {
         this.button.setAttribute('disabled', 'disabled');
@@ -2107,6 +2145,7 @@ button:focus:not(:focus-visible) {
     }
 
     onClicked() {
+      this.emit('clicked');
     }
 
     onBeforeState() {
