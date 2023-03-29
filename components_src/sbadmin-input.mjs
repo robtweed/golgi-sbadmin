@@ -238,6 +238,9 @@ label-hidden {
     setState(state) {
       if (state.name) {
         this.name = state.name;
+        if (this.form) {
+          this.form.fieldsByName.set(state.name, this);
+        }
       }
 
       if (state.type) {
@@ -288,12 +291,16 @@ label-hidden {
       return this.input.value;
     }
 
+    set value(val) {
+      this.input.value = val;
+    }
+
     onBeforeState() {
       this.input.id = this.name;
       this.label.setAttribute('for', this.name);
-      let form = this.getParentComponent('sbadmin-form');
-      if (form) {
-        form.fields.push(this);
+      this.form = this.getParentComponent('sbadmin-form');
+      if (this.form) {
+        this.form.fields.push(this);
       }
     }
 

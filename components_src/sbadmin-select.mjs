@@ -92,6 +92,9 @@ label-hidden {
       if (state.name) {
         this.name = state.name;
         this.select.name = state.name;
+        if (this.form) {
+          this.form.fieldsByName.set(state.name, this);
+        }
       }
       if (state.multiple) {
         this.select.setAttribute('multiple', 'multiple');
@@ -111,11 +114,12 @@ label-hidden {
       }
     }
 
-    options(optsArr) {
+    set options(optsArr) {
       let _this = this;
       optsArr.forEach(function(opt) {
         let el = document.createElement('option');
         el.setAttribute('value', opt.value);
+        if (opt.selected) el.setAttribute('selected', true);
         el.textContent = opt.text;
         _this.select.appendChild(el);
       });
@@ -130,14 +134,31 @@ label-hidden {
       }
     }
 
+    set value(val) {
+      this.select.value = val;
+    }
+
+    set values(values) {
+      let _this = this;
+      values.forEach(function(val) {
+        let option = _this.getOptionByValue(val);
+        option[0].setAttribute('selected', true);
+      });
+    }
+
+    getOptionByValue(value) {
+      return this.select.querySelectorAll('option[value="' + value + '"]');
+    }
+
     onBeforeState() {
       this.multiple = false;
       this.select.id = this.name;
       this.label.setAttribute('for', this.name);
-      let form = this.getParentComponent('sbadmin-form');
-      if (form) {
-        form.fields.push(this);
+      this.form = this.getParentComponent('sbadmin-form');
+      if (this.form) {
+        this.form.fields.push(this);
       }
+      this.childrenTarget = this.select;
     }
 
   `

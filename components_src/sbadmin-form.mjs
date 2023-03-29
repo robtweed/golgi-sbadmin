@@ -28,6 +28,7 @@ fieldset {
 
     onBeforeState() {
       this.fields = [];
+      this.fieldsByName = new Map();
     }
 
     get values() {

@@ -40,8 +40,22 @@
     - [Populating Content Panel Assemblies Just Once On Initial Rendering](#populating-content-panel-assemblies-just-once-on-initial-rendering)
   - [Carousels](#carousels)
   - [Forms](#forms)
-
-
+    - [*/assemblies/formdemo.js*](#assembliesformdemojs)
+    - [Creating a Form](#creating-a-form)
+    - [Text Input Form Element](#text-input-form-element)
+    - [*golgi-sbadmin* Form Element Automation](#golgi-sbadmin-form-element-automation)
+    - [Adding a Button](#adding-a-button)
+    - [Adding a Button Click Event Handler](#adding-a-button-click-event-handler)
+    - [Examining the Automatically-Marshalled Form Data](#examining-the-automatically-marshalled-form-data)
+    - [Displaying the Form Data in the Card Footer](#displaying-the-form-data-in-the-card-footer)
+    - [Try Out The Form](#try-out-the-form)
+    - [Other Input Form Element Types](#other-input-form-element-types)
+    - [Disabled and ReadOnly Fields](#disabled-and-readonly-fields)
+    - [Dynamically Setting An Input Field Value](#dynamically-setting-an-input-field-value)
+    - [Select / Drop-down Menu](#select-drop-down-menu)
+    - [Dynamically-Populated Select](#dynamically-populated-select)
+    - [Multiple-Choice Select / Drop-down Menu](#multiple-choice-select-drop-down-menu)
+    - [Dynamically-Populated Multipe-Choice Select](#dynamically-populated-multiple-choice-select)
 
 This tutorial will show you how you can get a basic SBAdmin User Interface up and running in a few minutes.
 
@@ -1848,7 +1862,7 @@ and now we can write the form values there by simply setting the value into the 
           };
 
 
-#### Try it Out
+#### Try Out The Form
 
 OK let's try that out. To summarise, here's what the latest version of the *formdemo.js* Assembly should look like:
 
@@ -1914,8 +1928,198 @@ Try changing the value in the text field and click the button again.  You'll see
 
 ----
 
+#### Other Input Form Element Types
+
+The *sbadmin-input* Component supports all the other main single-value HTML Input types, including:
+
+- color
+- date
+- datetime-local
+- email
+- hidden
+- month
+- number
+- password
+- tel
+- time
+- url
+- week
+
+Some of these, eg *date*, include browser-provided UI tools that are compatible with the SBAdmin UI.  Others include built-in pattern-match checks, eg *email*
+
+For example, try adding this to the form:
+
+              <sbadmin-input type="date" label="Enter Date" name="mydate" />
+
+When you enter a date into it, along with some text into the text field and click the *View* button, you'll now see:
+
+![Forms 4](images/form4.png)
+
+You'll see that the *form.values* array now includes the date that you've entered, eg:
+
+        [
+          {
+            "name":"yourname",
+            "value":"Rob"
+          },
+          {
+            "name":"mydate",
+            "value":"2023-03-24"
+          }
+        ]
+
+#### Disabled and ReadOnly Fields
+
+You can disable an input field using the attribute: *disabled="disabled"*
+
+You can make an input field read-only using the attribute: *readonly="readonly"*
+
+For example, add these to your form:
+
+        <sbadmin-input type="text" disabled="disabled" label="Disabled Text" name="disabledText" value="Some text" />
+        <sbadmin-input type="text" readonly="readonly" label="Read-only Text" name="readonlyText" value="Some more text" />
+
+When you click the *View Button* you'll see that these values are also marshalled into the *form.values* array:
+
+        [{
+            "name": "yourname",
+            "value": "Rob"
+        }, {
+            "name": "mydate",
+            "value": "2023-03-24"
+        }, {
+            "name": "disabledText",
+            "value": "Some text"
+        }, {
+            "name": "readonlyText",
+            "value": "Some more text"
+        }]
+
+
+#### Dynamically Setting An Input Field Value
+
+You'll often want to pre-populate form elements with values, perhaps using information fetched using a REST request from a remote service.
+
+The *sbadmin-input* Component has a *value* setter that allows you to do this.  Typically you'll invoke this via a hook method within your Assembly that contains the form.
+
+There's two ways you can apply such hook methods:
+
+- you could define a hook for each individual form field component, eg:
+
+        <sbadmin-input type="text" label="Enter Your Name" name="yourname" golgi:hook="populate" />
+
+  and your hook method might look something like this:
+
+        let hooks = {
+          'sbadmin-input': {
+            populate: function() {
+              this.value = 'Rob Tweed';
+            }
+          }
+        };
+
+  Of course you'd more likely be using a previously fetched value that you had saved into, say, the context object, eg:
+
+              this.value = this.context.user.name;
+
+
+- alternatively you can do it much more slickly with just a single hook method defined in the *sbadmin-form* tag, since it has automatic access to all the fields it contains, so you can update them all within a single hook method:
+
+        <sbadmin-form golgi:hook="populate">
+        ... etc
+        </sbadmin-form>
+
+  This hook method can then use the *onOwnerAssemblyRendered()* event handler (by the time it triggers, all the form's elements are rendered and ready for use), and, within that, the *sbadmin-form* Component's *fieldsByName* Map to access each field, eg:
+
+          let hooks = {
+            'sbadmin-form': {
+              populate: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  this.fieldsByName.get('yourname').value = 'Rob Tweed';
+                });
+              }
+            }
 
 
 
+#### Select / Drop-down Menu
 
+Simple, single-choice drop-down menus can be created as form elements by using the *sbadmin-select* Component.
+
+This is very similar in use to the standard HTML *select* tag, and you can even specify the menu options using standard HTML *option* tags.  For example:
+
+                  <sbadmin-select name="singleSelect" label="Select">
+                   <option value="one">1</option>
+                   <option value="two">2</option>
+                   <option value="three">3</option>
+                  </sbadmin-select>
+
+Add this to your form in the *formdemo.js* Assembly and reload the application in the browser.
+
+If you select a value, say *2*, from the drop-down menu and click the *View* button, you'll now see that the *form.values* array includes the element:
+
+        {"name":"singleSelect","value":"two"}
+
+
+#### Dynamically-Populated Select
+
+Just like the standard *sbadmin-input* Component (and as described earlier), the *sbadmin-select* Component, when used for single-value menus, includes a *value* setter with which you can pre-set the menu, eg within an *sbadmin-form* hook method:
+
+                  let select = this.fieldsByName.get('singleSelect');
+                  select.value = 'two';
+
+
+You can also dynamically populate the menu itself.  Instead of using a set of *option* child tags inside the *sbadmin-select* tag, you can use the *sbadmin-select* Component's *options* setter
+
+                  select.options = [
+                    {value: 's1', text: 'Option 1'},
+                    {value: 's2', text: 'Option 2'},
+                    {value: 's3', text: 'Option 3'},
+                    {value: 's4', text: 'Option 4'}
+                  ];
+
+#### Multiple-Choice Select / Drop-down Menu
+
+Multiple-choice drop-down menus can be created as form elements by, once again, using the *sbadmin-select* Component in exactly the same way, but by additionally adding the attribute: *multiple="true"*.
+
+
+For example, using hard-coded *options*:
+
+                  <sbadmin-select name="multipleSelect" label="Multi-Select">
+                   <option value="one">1</option>
+                   <option value="two">2</option>
+                   <option value="three">3</option>
+                   <option value="four">4</option>
+                  </sbadmin-select>
+
+Add this to your form in the *formdemo.js* Assembly and reload the application in the browser.
+
+If you select several values, say *2*, *3* and *4* from the drop-down menu and click the *View* button, you'll now see that the *form.values* array includes the values selected for this element in an array:
+
+        {"name":"multipleSelect","value":["two","three","four"]}
+
+If you change the selected values to just *1* and click the *View* button again, you'll now see:
+
+        {"name":"multipleSelect","value":["one"]}
+
+Once again, you can see how the *golgi-sbadmin* Form Components correctly marshall their data, completely automatically, returning either a single value or an array of values, depending on the Form Element type.
+
+
+#### Dynamically-Populated Multipe-Choice Select
+
+In order to pre-select one or more options in a Multiple-Choice *sbadmin-select* Component, use its *values* setter to specify the required option value(s), eg:
+
+                  let select = this.fieldsByName.get('multipleSelect');
+                  select.values = ['two', 'four'];
+
+You can also dynamically populate the menu itself: this is done identically to the technique described above for single-choice *sbadmin-select* Components, eg:
+
+                  select.options = [
+                    {value: 'one', text: 'Option 1'},
+                    {value: "two', text: 'Option 2'},
+                    {value: 'three', text: 'Option 3'},
+                    {value: 'four', text: 'Option 4'}
+                  ];
+
+----
 
