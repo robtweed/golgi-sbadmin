@@ -2123,3 +2123,65 @@ You can also dynamically populate the menu itself: this is done identically to t
 
 ----
 
+#### Radio Buttons
+
+Radio buttons are a type of single-value form element and effectively the equivalent of a single-value *select* tag: they allow a convenient way for a user to select one value from a set of pre-determined options.
+
+The *sbadmin-radio-group* Component creates a container for the individual *sbadmin-radio* Components that define each option.  These Components work together to automatically update the data held in the parent *sbadmin-form* Component, so that the *sbadmin-form* Component's *values* array always shows the latest selected/checked radio button in the group.
+
+To create a set of Radio Buttons, first you add an *sbadmin-radio-group* tag.  You must give the Radio Group component a *name* (for communication with the *sbadmin-form* Component), and you can optionally specify a *label*, eg:
+
+                  <sbadmin-radio-group name="colour" label="Select a Colour:">
+                  </sbadmin-radio-group>
+
+Then add an *sbadmin-radio* tag for each Radio Button.  You should specify a *value* and a *label* for each Radio Button.  You can pre-select one of the Radio Buttons by adding the attribute *checked="true", eg:
+
+                  <sbadmin-radio-group name="colour" label="Select a Colour:">
+                    <sbadmin-radio value="red" label="Red" checked="true" />
+                    <sbadmin-radio value="green" label="Green" />
+                    <sbadmin-radio value="blue" label="Blue" />
+                  </sbadmin-radio-group>
+
+Add this to your form in your *formdemo.js* Assembly file, save it and reload the application in the browser.  You should now see the radio buttons.
+
+When you click the *View* button, you'll see that the *form.values* array now includes an element representing the Radio Button Group, eg:
+
+        {name: 'colour', value: 'red'}
+
+Each time you select a different Radio Button, the *form.values* element will change correspondingly.
+
+
+#### Dynamically-Defined Radio Buttons
+
+You can create a Radio Button Group whose Radio Buttons are defined dynamically, for example using data fetched via a REST request to a remove service.
+
+To do this, you first specify an empty Radio Group in your form, eg:
+
+                  <sbadmin-radio-group name="town" label="Town:" />
+
+Just as in the previous examples we'll do the dynamic population within the *sbadmin-form* Component's Hook Method by making use of its onOwnerAssemblyRendered() method.  
+
+- First, use the *sbadmin-form* Component's *fieldsByName* Map to access the Radio Group Component.  
+
+- Then invoke the Radio Group Component's *renderRadios()* method, passing it an array of elements, each of which define the value and label for its Radio Button.
+
+- You can pre-check one of the dynamically-created Radio Buttons by adding *checked: true* to its defining object.
+
+For example:
+
+          let hooks = {
+            'sbadmin-form': {
+              populate: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  let radio = this.fieldsByName.get('town');
+                  radio.renderRadios([
+                    {value: 'redhill', label: 'Redhill', checked: true}, 
+                    {value: 'reigate', label: 'Reigate'}, 
+                  ]);
+                }
+              }
+            };
+
+Once rendered, this will behave exactly as before, automatically relaying the currently-selected value to its parent *sbadmin-form* Component.
+
+

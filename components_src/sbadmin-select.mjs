@@ -84,7 +84,7 @@ label-hidden {
 
   html: `
 <label class="form-label" golgi:prop="label"></label>
-<select class="form-select" golgi:prop="select"></select>
+<select class="form-select" golgi:prop="select" golgi:on_input="onChange"></select>
   `,
 
   methods: `
@@ -134,8 +134,13 @@ label-hidden {
       }
     }
 
+    onChange() {
+      this.form.emit('changed', this);
+    }
+
     set value(val) {
       this.select.value = val;
+      this.form.emit('changed', this);
     }
 
     set values(values) {
@@ -144,6 +149,7 @@ label-hidden {
         let option = _this.getOptionByValue(val);
         option[0].setAttribute('selected', true);
       });
+      this.form.emit('changed', this);
     }
 
     getOptionByValue(value) {
@@ -159,6 +165,7 @@ label-hidden {
         this.form.fields.push(this);
       }
       this.childrenTarget = this.select;
+      this.type = 'select';
     }
 
   `

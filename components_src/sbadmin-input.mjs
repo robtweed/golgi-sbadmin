@@ -231,7 +231,7 @@ label-hidden {
 
   html: `
 <label class="form-label" golgi:prop="label"></label>
-<input class="form-control" golgi:prop="input"></select>
+<input class="form-control" golgi:prop="input" golgi:on_input="onChanged"></select>
   `,
 
   methods: `
@@ -245,6 +245,7 @@ label-hidden {
 
       if (state.type) {
         this.input.setAttribute('type', state.type);
+        this.type = state.type;
       }
 
       if (typeof state.label === 'undefined') {
@@ -264,6 +265,7 @@ label-hidden {
       }
       if (state.value) {
         this.input.value = state.value;
+        this.form.emit('changed', this);
       }
       if (state.cls) {
         this.input.className = state.cls;
@@ -293,6 +295,11 @@ label-hidden {
 
     set value(val) {
       this.input.value = val;
+      this.form.emit('changed', this);
+    }
+
+    onChanged() {
+      this.form.emit('changed', this);
     }
 
     onBeforeState() {

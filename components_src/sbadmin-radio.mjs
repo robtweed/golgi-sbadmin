@@ -49,6 +49,7 @@ let def = {
     onClicked() {
       if (this.radioGroup) {
         this.radioGroup.value = this.value;
+        this.radioGroup.form.emit('changed', this.radioGroup);
       }
     }
 

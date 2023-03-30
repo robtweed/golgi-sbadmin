@@ -88,25 +88,42 @@ label-hidden {
   `,
 
   html: `
-<div />
+<div>
+  <div golgi:prop="label"></div>
+  <div golgi:prop="childrenTarget"></div>
+</div>
   `,
 
   methods: `
     setState(state) {
       if (state.name) {
         this.name = state.name;
+        if (this.form) {
+          this.form.fieldsByName.set(state.name, this);
+        }
+      }
+      if (state.label) {
+        this.label.textContent = state.label;
+      }
+      if (state.style) {
+        this.label.style = state.style;
       }
     }
 
     onBeforeState() {
+      this.type = 'radio';
       this.optionsByName = new Map();
-      let form = this.getParentComponent('sbadmin-form');
-      if (form) {
-        form.fields.push(this);
+      this.form = this.getParentComponent('sbadmin-form');
+      if (this.form) {
+        this.form.fields.push(this);
       }
     }
 
-    options(arr) {
+    async renderRadios(arr) {
+      // [{value: 'red', label: 'Red', checked: true}, {value: 'green', label: 'green'}]
+      // specify the method setState in the StateMap to get these applied automatically
+
+      await this.renderComponentMap('sbadmin-radio', this.childrenTarget, ctx, arr, 'radio_items:setState');
     }
 
   `
