@@ -6,7 +6,7 @@ export function load() {
   <sbadmin-carousel>
     <sbadmin-carousel-item active="true">
 
-      <sbadmin-card bgColor="white" textColor="dark" widthStyle="60%" position="center">
+      <sbadmin-card bgColor="white" textColor="dark" width="60%" position="center">
         <sbadmin-card-header text="Carousel Card Demo" />
         <sbadmin-card-body>
           <sbadmin-card-text>
@@ -20,7 +20,7 @@ This is a simple example of a carousel card.
 
     <sbadmin-carousel-item>
 
-      <sbadmin-card bgColor="white" textColor="dark" widthStyle="60%" position="center">
+      <sbadmin-card bgColor="white" textColor="dark" width="60%" position="center">
         <sbadmin-card-header text="Form Component Demonstration" />
         <sbadmin-card-body>
           <sbadmin-form>
@@ -56,7 +56,7 @@ This is a simple example of a carousel card.
 
     <sbadmin-carousel-item>
 
-      <sbadmin-card bgColor="white" textColor="dark" widthStyle="60%" position="center">
+      <sbadmin-card bgColor="white" textColor="dark" width="60%" position="center">
         <sbadmin-card-header text="Carousel Card 3" />
         <sbadmin-card-body>
           <sbadmin-card-text>
@@ -75,27 +75,18 @@ A Third Carousel Card
   let hooks = {
     'sbadmin-select': {
       configure: function() {
-        this.options([
+        this.options = [
           {value: 'a', text: 'Option 1'},
           {value: 'b', text: 'Option 2'}
-        ]);
+        ];
       },
       configureMultiple: function() {
-        this.options([
+        this.options = [
           {value: 'm1', text: 'Option 1'},
           {value: 'm2', text: 'Option 2'},
           {value: 'm3', text: 'Option 3'},
           {value: 'm4', text: 'Option 4'}
-        ]);
-      }
-    },
-    'sbadmin-radio': {
-      configure: function() {
-        this.options([
-          {value: 'a', label: 'Option a', checked: true},
-          {value: 'b', label: 'Option b'},
-          {value: 'c', label: 'Option c'}
-        ]);
+        ];
       }
     },
     'sbadmin-button': {

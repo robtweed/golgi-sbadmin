@@ -29,6 +29,7 @@ let def = {
       }
       if (state.checked) {
         this.checkbox.checked = true;
+        this.onClicked();
       }
       if (state.inline) {
         this.rootElement.classList.add('form-check-inline');
@@ -55,6 +56,7 @@ let def = {
       if (!this.checkbox.checked) {
         this.checkbox.classList.toggle('showImage');
       }
+      this.checkboxGroup.form.emit('changed', this.checkboxGroup);
     }
 
     isSwitch() {
@@ -79,6 +81,12 @@ let def = {
 
     check() {
       this.checkbox.checked = true;
+      this.onClicked();
+    }
+
+    uncheck() {
+      this.checkbox.checked = false;
+      this.onClicked();
     }
 
     get checked() {

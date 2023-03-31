@@ -109,13 +109,19 @@ label-hidden {
   `,
 
   html: `
-<div />
+<div>
+  <div golgi:prop="label"></div>
+  <div golgi:prop="childrenTarget"></div>
+</div>
   `,
 
   methods: `
     async setState(state) {
       if (state.name) {
         this.name = state.name;
+        if (this.form) {
+          this.form.fieldsByName.set(state.name, this);
+        }
       }
       if (state.value) {
         // dynamically add a single checkbox
@@ -124,19 +130,33 @@ label-hidden {
         if (state.label) {
           cb.labelText = state.label;
         }
+        if (state.title) {
+          this.label.textContent = state.title;
+        }
         if (state.switch) {
           cb.isSwitch();
         }
+        if (state.offValue) {
+          this.offValue = state.offValue;
+        }
+        return;
+      }
+      if (state.label) {
+        this.label.textContent = state.label;
+      }
+      if (state.style) {
+        this.label.style = state.style;
       }
     }
 
     onBeforeState() {
+      this.type = 'checkbox';
       this.valuesById = new Map();
       this.count = 0;
       this.checkboxes = [];
-      let form = this.getParentComponent('sbadmin-form');
-      if (form) {
-        form.fields.push(this);
+      this.form = this.getParentComponent('sbadmin-form');
+      if (this.form) {
+        this.form.fields.push(this);
       }
     }
 
@@ -158,7 +178,7 @@ label-hidden {
           return values[0];
         }
         else {
-          return false;
+          return this.offValue || false;
         }
       }
       else {
@@ -166,7 +186,33 @@ label-hidden {
       }
     }
 
-    options(arr) {
+    get values() {
+      return this.value;
+    }
+
+    getCheckboxByValue(val) {
+      let cb;
+      for (cb of this.checkboxes) {
+        if (cb.value === val) return cb;
+      }
+      return false;
+    }
+
+    checkByValue(val) {
+      let cb = this.getCheckboxByValue(val);
+      if (cb) cb.check();
+    }
+
+    uncheckByValue(val) {
+      let cb = this.getCheckboxByValue(val);
+      if (cb) cb.uncheck();
+    }
+
+    async renderCheckboxes(arr) {
+      // [{value: 'red', label: 'Red', checked: true}, {value: 'green', label: 'green'}]
+      // specify the method setState in the StateMap to get these applied automatically
+
+      await this.renderComponentMap('sbadmin-checkbox', this.childrenTarget, ctx, arr, 'cb_items:setState');
     }
 
   `

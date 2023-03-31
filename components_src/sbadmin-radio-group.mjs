@@ -113,11 +113,27 @@ label-hidden {
     onBeforeState() {
       this.type = 'radio';
       this.optionsByName = new Map();
+      this.radios = [];
+      this.count = 0;
       this.form = this.getParentComponent('sbadmin-form');
       if (this.form) {
         this.form.fields.push(this);
       }
     }
+
+    getRadioByValue(val) {
+      let radio;
+      for (radio of this.radios) {
+        if (radio.value === val) return radio;
+      }
+      return false;
+    }
+
+    checkByValue(val) {
+      let radio = this.getRadioByValue(val);
+      if (radio) radio.check();
+    }
+
 
     async renderRadios(arr) {
       // [{value: 'red', label: 'Red', checked: true}, {value: 'green', label: 'green'}]

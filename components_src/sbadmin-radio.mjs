@@ -67,6 +67,7 @@ let def = {
 
     check() {
       this.radio.checked = true;
+      this.onClicked();
     }
 
     get checked() {
@@ -92,6 +93,8 @@ let def = {
       if (this.radioGroup) {
         this.radio.name = this.radioGroup.name;
         this.radioGroup.optionsByName.set(name, this);
+        this.radioGroup.radios.push(this);
+        this.radioGroup.count++;
       }
       this.radio.id = name;
       this.label.setAttribute('for', name);

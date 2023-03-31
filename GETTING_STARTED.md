@@ -52,10 +52,21 @@
     - [Other Input Form Element Types](#other-input-form-element-types)
     - [Disabled and ReadOnly Fields](#disabled-and-readonly-fields)
     - [Dynamically Setting An Input Field Value](#dynamically-setting-an-input-field-value)
+    - [Detecting and Handling Changes Within a Form](#detecting-and-handling-changes-within-a-form)
     - [Select / Drop-down Menu](#select-drop-down-menu)
     - [Dynamically-Populated Select](#dynamically-populated-select)
     - [Multiple-Choice Select / Drop-down Menu](#multiple-choice-select-drop-down-menu)
     - [Dynamically-Populated Multipe-Choice Select](#dynamically-populated-multiple-choice-select)
+    - [Radio Buttons](#radio-buttons)
+    - [Dynamically-Defined Radio Buttons](#dynamically-defined-radio-buttons)
+    - [Programmatically Checking and accessing Radio Buttons](#programmatically-checking-and-accessing-radio-buttons)
+    - [Checkboxes](#checkboxes)
+    - [Multiple-Choice Checkboxes](#multiple-choice-checkboxes)
+    - [Dynamically-Defined Checkboxes](#dynamically-defined-checkboxes)
+    - [Programmatically Checking, Unchecking and accessing Checkboxes](#programmatically-checking-unchecking-and-accessing-checkboxes)
+    - [Single-Value Checkbox](#single-value-checkbox)
+    - [Switches](#switches)
+    - [Programmatically Checking, Unchecking and accessing Single-Value Checkboxes](#programmatically-checking-unchecking-and-accessing-single-value-checkboxes)
 
 This tutorial will show you how you can get a basic SBAdmin User Interface up and running in a few minutes.
 
@@ -2041,6 +2052,33 @@ There's two ways you can apply such hook methods:
             }
 
 
+#### Detecting and Handling Changes Within a Form
+
+You can detect whenever the value of any field within a Form is changed by using the *sbadmin-form* Component's *on()* event handler.  The Event name to use is *changed*, eg within an *sbadmin-form* Component's hook method named *populate*:
+
+
+          let hooks = {
+            'sbadmin-form': {
+              populate: function() {
+                this.on('changed', function(field) {
+                  console.log('change in form!');
+                  console.log('component name: ' + field.componentName);
+                  console.log('form field type: ' + field.type);
+                  console.log('field name: ' + field.name);
+                  if (field.values) {
+                    // multi-value form field
+                    console.log('New values: ' + JSON.stringify(field.values));
+                  }
+                  else {
+                    // single-value form field
+                    console.log('New value: ' + field.value);
+                  }
+                });
+              }
+            }
+          };
+
+
 
 #### Select / Drop-down Menu
 
@@ -2148,7 +2186,7 @@ When you click the *View* button, you'll see that the *form.values* array now in
 
         {name: 'colour', value: 'red'}
 
-Each time you select a different Radio Button, the *form.values* element will change correspondingly.
+Each time you select a different Radio Button, the *form.values* array will change correspondingly.
 
 
 #### Dynamically-Defined Radio Buttons
@@ -2184,4 +2222,169 @@ For example:
 
 Once rendered, this will behave exactly as before, automatically relaying the currently-selected value to its parent *sbadmin-form* Component.
 
+Here's what the two example sets of Radio Buttons will look like, along with the displayed *form.values* array in the Card Footer:
+
+![Forms 5](images/form5.png)
+
+
+#### Programmatically Checking and accessing Radio Buttons
+
+The *sbadmin-radio* Radio Button Component includes a *check()* method.  Invoking this will check the specified Radio Button and automatically uncheck the previously checked on in the Radio Button Group.  The *form.values* array will be automatically and correspondingly updated.
+
+To locate a specific Radio Button Component within a Radio Button Group, you can use the *sbadmin-radio-group* Component's *getRadioByValue()* method, specifying the value of the Radio Button you want to access, eg:
+
+        let radioGroup = this.fieldsByName.get('town');
+        let radio = radioGroup.getRadioByValue('reigate');  // Returns the Radio Button Component for Reigate
+
+To check a Radio Button from within a Radio Button Group, you can use the *sbadmin-radio-group* Component's *checkByValue()* method, eg:
+
+        let radioGroup = this.fieldsByName.get('town');
+        radioGroup.checkByValue('reigate');
+
+Any other previously checked Radio Button in the group will automatically uncheck and the parent form's field data will be updated.
+
+----
+
+#### Checkboxes
+
+Checkboxes can be used in two distinct ways:
+
+- as a type of multiple-choice element and effectively the equivalent of a multiple-choice *select* tag: they allow a convenient way for a user to select zer, one or more values from a set of pre-determined options.
+
+- as a type of single-value form element and effectively the equivalent of a single-value *select* tag with just two possible values, essentially allowing a true/false or 1/0 choice of response.
+
+
+The *sbadmin-checkbox-group* Component creates a container for the individual *sbadmin-checkbox* Components that define each option.  These Components work together to automatically update the data held in the parent *sbadmin-form* Component, so that the *sbadmin-form* Component's *values* array always corresponds to the latest selected/checked checkbox(es) in the group.
+
+
+#### Multiple-Choice Checkboxes
+
+To create a set of Multiple-choice Checkboxes, first you add an *sbadmin-checkbox-group* tag.  You must give the Checkbox Group component a *name* (for communication with the *sbadmin-form* Component), and you can optionally specify a *label*, eg:
+
+                  <sbadmin-checkbox-group name="colour" label="Select your favourite colours:">
+                  </sbadmin-checkbox-group>
+
+Then add an *sbadmin-checkbox* tag for each Checkbox you require.  You should specify a *value* and a *label* for each Checkbox.  You can pre-select one of the Checkboxes by adding the attribute *checked="true", eg:
+
+                  <sbadmin-checkbox-group name="colour" label="Select your favourite colours:">
+                    <sbadmin-checkbox value="red" label="Red" checked="true" />
+                    <sbadmin-checkbox value="green" label="Green" />
+                    <sbadmin-checkbox value="blue" label="Blue" />
+                  </sbadmin-checkbox-group>
+
+Add this to your form in your *formdemo.js* Assembly file, save it and reload the application in the browser.  You should now see the checkboxes.
+
+When you click the *View* button, you'll see that the *form.values* array now includes an element representing the Checkbox Group, with the value(s) of the checked/selected Checkboxes in an array named *value*, eg:
+
+        {name: 'colour', value: ['red', 'blue']}
+
+Each time you check or uncheck the available Checkboxes, the *form.values* array will change correspondingly.
+
+You'll probably recognise this behaviour as being identical to that of a multiple-choice *sbadmin-select* Component.
+
+#### Dynamically-Defined Checkboxes
+
+You can create a Checkbox Group whose Checkboxes are defined dynamically, for example using data fetched via a REST request to a remove service.
+
+To do this, you first specify an empty Checkbox Group in your form, eg:
+
+                  <sbadmin-checkbox-group name="town" label="Town:" />
+
+Just as in the previous examples we'll do the dynamic population within the *sbadmin-form* Component's Hook Method by making use of its onOwnerAssemblyRendered() method.  
+
+- First, use the *sbadmin-form* Component's *fieldsByName* Map to access the Checkbox Group Component.  
+
+- Then invoke the Checkbox Group Component's *renderCheckboxes()* method, passing it an array of elements, each of which define the value and label for its Checkbox.
+
+- You can pre-check one or more of the dynamically-created Checkboxes by adding *checked: true* to their defining objects.
+
+For example:
+
+          let hooks = {
+            'sbadmin-form': {
+              populate: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  let cb = this.fieldsByName.get('town');
+                  cb.renderCheckboxes([
+                    {value: 'redhill', label: 'Redhill', checked: true}, 
+                    {value: 'reigate', label: 'Reigate'}, 
+                  ]);
+                }
+              }
+            };
+
+Once rendered, this will behave exactly as before, automatically relaying the currently-selected value to its parent *sbadmin-form* Component.
+
+
+#### Programmatically Checking, Unchecking and accessing Checkboxes
+
+The *sbadmin-checkbox* Checkbox Component includes a *check()* and *uncheck()* method.
+
+To locate a specific checkbox within a Checkbox Group, you can use the *sbadmin-checkbox-group* Component's *getCheckboxByValue()* method, specifying the value of the Checkbox you want to access, eg:
+
+        let cbg = this.fieldsByName.get('town');
+        let cb = cbg.getCheckboxByValue('reigate');  // Returns the Checkbox Component for Reigate
+
+To check and/or uncheck a checkbox from within a Checkbox Group, you can use the *sbadmin-checkbox-group* Component's *checkByValue()* and *uncheckByValue()* methods, eg:
+
+        let cbg = this.fieldsByName.get('town');
+        cbg.checkByValue('reigate');
+        cbg.uncheckByValue('redhill');
+
+
+#### Single-Value Checkbox
+
+A Single-Value Checkbox is a useful UI device for situations where you want two possible values for something, eg:
+
+- yes/no
+- true/false
+- on/off
+
+To Create a single-value Checkbox, use the *sbadmin-checkbox-group* Component as before, but:
+
+- don't add any *sbadmin-checkbox* tags inside it or populate it dynamically
+- add a value using the *value* attribute
+- optionally add a *title* attribute to display a heading label for the Checkbox
+
+For example:
+
+        <sbadmin-checkbox-group name="agreement" value="yes" label="I Agree" title="Please tick to continue:" />
+
+Which will appear like this:
+
+![Forms 6](images/form6.png)
+
+
+The value of *yes* will be applied to the Checkbox Group field named *agreement* when the Checkbox is checked.  
+
+By default, the value when not checked is *false*.  If you want a different value for when the Checkbox is not checked, add the *offValue* attribute, eg:
+
+        <sbadmin-checkbox-group name="agreement" value="yes" offValue="no" label="I Agree" title="Please tick to continue:" />
+
+#### Switches
+
+A Switch is simply a single-value Checkbox that is visually displayed as a slidable switch device rather than a traditional checkbox.
+
+You can convert a Single-value Checkbox to a switch simply by adding the *switch="true" attribute, eg:
+
+        <sbadmin-checkbox-group name="agreement" switch="true" value="yes" offValue="no" label="I Agree" title="Please tick to continue:" />
+
+Switches otherwise behave identically to Single-Value Checkboxes.
+
+
+#### Programmatically Checking, Unchecking and accessing Single-Value Checkboxes or Switches
+
+To locate the checkbox for a Single-Value Checkbox Group, access the first member of the *sbadmin-checkbox-group* Component's *checkboxes* array, , eg using the previous example:
+
+        let cbg = this.fieldsByName.get('agreement');
+        let cb = cbg.checkboxes[0];  // Returns the Checkbox Component
+
+The *sbadmin-checkbox* Checkbox Component includes a *check()* and *uncheck()* method, for example
+
+        let cbg = this.fieldsByName.get('agreement');
+        cbg.checkboxes[0].check(); // Sets the value to yes
+
+or:
+
+        cbg.checkboxes[0].uncheck(); // Sets the value to no
 
