@@ -53,6 +53,8 @@
     - [Disabled and ReadOnly Fields](#disabled-and-readonly-fields)
     - [Dynamically Setting An Input Field Value](#dynamically-setting-an-input-field-value)
     - [Detecting and Handling Changes Within a Form](#detecting-and-handling-changes-within-a-form)
+    - [Textarea Field](#textarea-field)
+    - [Range Field](#range-field)
     - [Select / Drop-down Menu](#select-drop-down-menu)
     - [Dynamically-Populated Select](#dynamically-populated-select)
     - [Multiple-Choice Select / Drop-down Menu](#multiple-choice-select-drop-down-menu)
@@ -2054,7 +2056,7 @@ There's two ways you can apply such hook methods:
 
 #### Detecting and Handling Changes Within a Form
 
-You can detect whenever the value of any field within a Form is changed by using the *sbadmin-form* Component's *on()* event handler.  The Event name to use is *changed*, eg within an *sbadmin-form* Component's hook method named *populate*:
+You can detect whenever the value of any field (of any type) within a Form is changed by using the *sbadmin-form* Component's *on()* event handler.  The Event name to use is *changed*, eg within an *sbadmin-form* Component's hook method named *populate*:
 
 
           let hooks = {
@@ -2078,6 +2080,104 @@ You can detect whenever the value of any field within a Form is changed by using
             }
           };
 
+
+#### Textarea Field
+
+The *sbadmin-textarea* Component is an appropriately styled version of the HTML *textarea* tag for use with multi-line text values.
+
+Its use is very similar to that of the *sbadmin-input* tag, eg try adding this to your form in the *formdemo.js* Assembly File:
+
+        <sbadmin-textarea label="Notes" name="notes" value="Here are some notes..." />
+
+If you need to specify multiple lines and/or large amounts of text, you can alternatively define it as *textContent* between an opening and closing *sbadmin-textarea* tag, eg:
+
+        <sbadmin-textarea label="Notes" name="notes">
+        Line 1
+        Line 2
+        Line 3
+        </sbadmin-textarea>
+
+You can specify *cols* and *rows* just like a standard *textarea* tag, and you can also specify *placeholder* text by using the *placeholder* attribute.
+
+You can also disable the *textarea* field by adding the attribute *disabled="true".
+
+You can also set the *textarea* field to be read-only by adding the attribute *readonly="true".
+
+You can dynamically access an *sbadmin-textarea* Component from within a *sbadmin-form* Component's hook method, using the same techniques described earlier for *input* tags.
+
+          let hooks = {
+            'sbadmin-form': {
+              populate: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  let textarea = this.fieldsByName.get('notes');
+                });
+              }
+            }
+
+You can dynamically change the text in an *sbadmin-textarea* Component by using its *value* setter.  Use *\n* to denote a new line in the text, eg:
+
+          let hooks = {
+            'sbadmin-form': {
+              populate: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  this.fieldsByName.get('notes').value = 'Line 1\nLine2';
+                });
+              }
+            }
+
+Every time the value is changed, whether manually or programmatically, the *form.values* array will automatically be updated with the latest value.
+
+
+#### Range Field
+
+The *sbadmin-range* Component is an appropriately styled version of the HTML *input* tag of type *range*.
+
+Its use is very similar to that of the *sbadmin-input* tag, eg try adding this to your form in the *formdemo.js* Assembly File:
+
+        <sbadmin-range label="Enter Range" name="range" />
+
+By default, the minimum value is 0.  Use the *min* attribute to specify a different value.
+
+By default, the maximum value is 100.  Use the *max* attribute to specify a different value.
+
+By default, the incremental step value is 1.  Use the *step* attribute to specify a different value.
+
+For exaample:
+
+        <sbadmin-range label="Enter Range" name="range" min="20" max="50" step="5" />
+
+By default, the *sbadmin-range* field will use the full available width.  To reduce this, add a *cls* attribute specifying one of the available width classes.  For example, to occupy just 25% of the available width:
+
+        <sbadmin-range label="Enter Range" name="range" cls="w-25" />
+
+Other choices are:
+
+- 50% of available width: cls="w-50"
+- 75% of available width: cls="w-75"
+
+You can dynamically access an *sbadmin-range* Component from within a *sbadmin-form* Component's hook method, using the same techniques described earlier for *input* tags.
+
+          let hooks = {
+            'sbadmin-form': {
+              populate: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  let range = this.fieldsByName.get('range');
+                });
+              }
+            }
+
+You can dynamically change the value in an *sbadmin-range* Component by using its *value* setter, eg:
+
+          let hooks = {
+            'sbadmin-form': {
+              populate: function() {
+                this.onOwnerAssemblyRendered(function() {
+                  this.fieldsByName.get('range').value = 75;
+                });
+              }
+            }
+
+Every time the value is changed, whether manually or programmatically, the *form.values* array will automatically be updated with the latest value.
 
 
 #### Select / Drop-down Menu
@@ -2387,4 +2487,6 @@ The *sbadmin-checkbox* Checkbox Component includes a *check()* and *uncheck()* m
 or:
 
         cbg.checkboxes[0].uncheck(); // Sets the value to no
+
+
 

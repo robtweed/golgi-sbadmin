@@ -109,12 +109,18 @@ input {
     setState(state) {
       if (state.name) {
         this.name = state.name;
+        if (this.form) {
+          this.form.fieldsByName.set(state.name, this);
+        }
       }
       if (state.label) {
         this.label.textContent = state.label;
       }
       if (state.value) {
         this.input.value = state.value;
+        if (this.form) {
+          this.form.emit('changed', this);
+        }
       }
       if (state.min) {
         this.input.setAttribute('min', state.min);
@@ -134,6 +140,9 @@ input {
 
     moveThumb() {
       let value = this.input.value;
+      if (this.form) {
+        this.form.emit('changed', this);
+      }
       let pos = ((value - this.min) / (this.max - this.min)) * 100;
       let offset = pos * 0.03;
       pos = pos - offset;
@@ -155,7 +164,13 @@ input {
       return this.input.value;
     }
 
+    set value(val) {
+      this.input.value = val;
+      this.form.emit('changed', this);
+    }
+
     onBeforeState() {
+      this.type = 'range';
       this.input.id = this.name;
       this.label.setAttribute('for', this.name);
       this.form = this.getParentComponent('sbadmin-form');

@@ -251,13 +251,16 @@ label-hidden {
 
   html: `
 <label class="form-label" golgi:prop="label"></label>
-<textarea class="form-control" golgi:prop="textarea"></select>
+<textarea class="form-control" golgi:prop="textarea" golgi:on_input="onChanged"></select>
   `,
 
   methods: `
     setState(state) {
       if (state.name) {
         this.name = state.name;
+        if (this.form) {
+          this.form.fieldsByName.set(state.name, this);
+        }
       }
 
       if (typeof state.label === 'undefined') {
@@ -283,6 +286,11 @@ label-hidden {
       }
       if (state.value) {
         this.textarea.value = state.value;
+        this.form.emit('changed', this);
+      }
+      if (state.textContent) {
+        this.textarea.value = state.textContent;
+        this.form.emit('changed', this);
       }
       if (state.cls) {
         this.textarea.className = state.cls;
@@ -310,12 +318,22 @@ label-hidden {
       this.textarea.readOnly = false;
     }
 
+    set value(val) {
+      this.textarea.value = val;
+      this.form.emit('changed', this);
+    }
+
+    onChanged() {
+      this.form.emit('changed', this);
+    }
+
     onBeforeState() {
+      this.type = 'textarea';
       this.textarea.id = this.name;
       this.label.setAttribute('for', this.name);
-      let form = this.getParentComponent('sbadmin-form');
-      if (form) {
-        form.fields.push(this);
+      this.form = this.getParentComponent('sbadmin-form');
+      if (this.form) {
+        this.form.fields.push(this);
       }
     }
 
