@@ -1,7 +1,7 @@
 # Golgi WebComponent Library, Implementing the SBAdmin User Interface
  
 Rob Tweed <rtweed@mgateway.com>  
-21 February 2023, M/Gateway Developments Ltd [http://www.mgateway.com](http://www.mgateway.com)  
+23 May 2023, MGateway Ltd [http://www.mgateway.com](http://www.mgateway.com)  
 
 Twitter: @rtweed
 
@@ -215,7 +215,7 @@ This Component should be used to display appropriately-styled text within the SB
 
 # License
 
- Copyright (c) 2023 M/Gateway Developments Ltd,                           
+ Copyright (c) 2023 MGateway Ltd,                           
  Redhill, Surrey UK.                                                      
  All rights reserved.                                                     
                                                                            

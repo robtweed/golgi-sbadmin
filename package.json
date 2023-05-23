@@ -1,6 +1,6 @@
 {
   "name": "golgi-sbadmin",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "Golgi Component Library for the SBAdmin User Interface",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+https://github.com/robtweed/golgi-sbadmin.git"
   },
-  "author": "Rob Tweed, M/Gateway Developments Ltd",
+  "author": "Rob Tweed, MGateway Ltd",
   "license": "Apache-2.0",
   "dependencies": {
   },
