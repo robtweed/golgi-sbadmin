@@ -1831,10 +1831,10 @@ The *sbadmin-form* Component includes a built-in getter method - *values* - whic
 
 So let's access that.
 
-To make things a little easier, you'll have notice that I added the *sbadmin-button* tag within the *sbadmin-form* tag.  I didn't need to do that, but by doing so, I can easily access the *sbadmin-form* Component from the *sbadmin-button* Component by using the *getParentComponent()* method that all Golgi Components include:
+To make things a little easier, you'll have notice that I added the *sbadmin-button* tag within the *sbadmin-form* tag.  I didn't need to do that, but by doing so, I can easily access the *sbadmin-form* Component from the *sbadmin-button* Component via its *form* property:
 
 
-          let form = this.getParentComponent('sbadmin-form');
+          let form = this.form;
 
 So now we can invoke the form Component's *values* getter method.  Let's put that all together:
 
@@ -1842,7 +1842,7 @@ So now we can invoke the form Component's *values* getter method.  Let's put tha
           let hooks = {
             'sbadmin-button': {
               configure: function() {
-                let form = this.getParentComponent('sbadmin-form');
+                let form = this.form;
                 this.on('clicked', function() {
                   console.log(form.values);
                 });
@@ -1865,7 +1865,7 @@ and now we can write the form values there by simply setting the value into the 
           let hooks = {
             'sbadmin-button': {
               configure: function() {
-                let form = this.getParentComponent('sbadmin-form');
+                let form = this.form;
                 this.on('clicked', function() {
                   form.golgi_state.formcard = {footer: JSON.stringify(form.values)};
                 });
@@ -1910,7 +1910,7 @@ OK let's try that out. To summarise, here's what the latest version of the *form
           let hooks = {
             'sbadmin-button': {
               configure: function() {
-                let form = this.getParentComponent('sbadmin-form');
+                let form = this.form;
                 this.on('clicked', function() {
                   form.golgi_state.formcard = {footer: JSON.stringify(form.values)};
                 });

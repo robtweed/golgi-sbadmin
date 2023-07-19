@@ -194,7 +194,7 @@ input, button, select, optgroup, textarea {
       this.modal = new bootstrap.Modal(this.rootElement, {
         keyboard: false
       });
-      this.show();
+      this.hide();
       this.body = this.childrenTarget;
     }
   `
