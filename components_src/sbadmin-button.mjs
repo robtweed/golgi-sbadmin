@@ -2081,6 +2081,10 @@ button:focus:not(:focus-visible) {
   margin-right: auto;
 }
 
+.d-none {
+  display: none !important;
+}
+
 *, ::before, ::after {
     box-sizing: border-box;
 }
@@ -2150,6 +2154,14 @@ button:focus:not(:focus-visible) {
 
     onBeforeState() {
       this.form = this.getParentComponent('sbadmin-form');
+    }
+
+    show() {
+      this.rootElement.classList.remove('d-none');
+    }
+
+    hide() {
+      this.rootElement.classList.add('d-none');
     }
     
   `
