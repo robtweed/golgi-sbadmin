@@ -1,0 +1,1 @@
+function load(t){let e="sbadmin-div",n=-1;customElements.define(e,class extends HTMLElement{constructor(){super(),n++;this.html='<div><span golgi:prop="spanTag"></span></div>',this.name=e+"-"+n}setState(t){t.name&&(this.name=t.name),t.text&&(this.spanTag.textContent=t.text)}})}export{load};

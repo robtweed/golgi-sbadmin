@@ -1,0 +1,1 @@
+function load(t){let e="sbadmin-image",s=-1;customElements.define(e,class extends HTMLElement{constructor(){super(),s++;this.html="<img>",this.name=e+"-"+s}setState(t){t.name&&(this.name=t.name),t.src&&(this.rootElement.src=t.src)}setSrc(t){this.rootElement.src=t}set src(t){this.rootElement.src=t}set cls(t){this.rootElement.classList.add(t)}})}export{load};
