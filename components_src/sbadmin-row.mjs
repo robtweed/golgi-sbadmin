@@ -173,7 +173,7 @@ let def = {
         let clsArr = state.cls.split(' ');
         let _this = this;
         clsArr.forEach(function(cl) {
-          _this.button.classList.add(cl);
+          _this.rootElement.classList.add(cl);
         });
       }
     }
