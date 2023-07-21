@@ -47,7 +47,7 @@ let def = {
   `,
 
   html: `
-<div golgi:component-class="container" />
+<div class="container" />
   `,
 
   methods: `

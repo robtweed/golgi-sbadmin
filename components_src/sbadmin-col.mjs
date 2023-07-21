@@ -73,7 +73,7 @@ let def = {
   `,
 
   html: `
-<div golgi:component-class="col" />
+<div class="col" />
   `,
 
   methods: `
