@@ -59,6 +59,17 @@ let def = {
         this.classList.remove('container');
         this.classList.add('container-' + state.size);
       }
+      if (state.cls) {
+        let clsArr = state.cls.split(' ');
+        let _this = this;
+        clsArr.forEach(function(cl) {
+          _this.button.classList.add(cl);
+        });
+      }
+    }
+
+    set cls(value) {
+      this.setState({cls: value});
     }
 
   `
