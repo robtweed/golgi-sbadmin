@@ -24,6 +24,14 @@ let def = {
 
     }
 
+    set active(value) {
+      if (value) {
+        this.rootElement.classList.add('active');      }
+      else {
+        this.rootElement.classList.remove('active');
+      }
+    }
+
   `
 };
 export {def};
