@@ -25,7 +25,7 @@
   // fetch the pre-bundled sbadmin components and instantiate them.
   //   comment this out to load each one dynamically only when needed (slower if on a slow network)
 
-  await golgi.fetch_optimised_components(context, urlRoot + '/js/components/golgi-components.js')
+  await golgi.fetch_optimised_components(context, 'https://robtweed.github.io/golgi-sbadmin/components/golgi-components.js');
 
   // now render the root assembly, which will start everything off.  
   //  Note that due to the previous command, by the time the
