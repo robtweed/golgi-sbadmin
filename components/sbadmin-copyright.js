@@ -1,1 +1,50 @@
-function load(t){let e="sbadmin-copyright",o=-1;customElements.define(e,class extends HTMLElement{constructor(){super(),o++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML='<style>.txt-small{font-size:10px}</style><p class="txt-small"><span>Copyright &copy; </span><span golgi:prop="textTarget"></p>',this.name=e+"-"+o}setState(t){var e;t.name&&(this.name=t.name),t.text&&(this.textTarget.textContent=t.text),t.textContent&&(this.textTarget.textContent=t.textContent),!0===t.center&&((e=this.rootComponent.footerTarget).classList.remove("justify-content-between"),e.classList.add("justify-content-center")),t.color&&(this.rootElement.style.color=t.color)}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-copyright';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_copyright extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      this.attachShadow({ mode: 'open' });
+      const html = `
+<style>
+
+.txt-small {
+  font-size: 10px;
+}
+  
+</style>
+
+<p class="txt-small">
+  <span>Copyright &copy; </span>
+  <span golgi:prop="textTarget" />
+</p>
+  `;
+      this.shadowRoot.innerHTML = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+      if (state.text) {
+        this.textTarget.textContent = state.text;
+      }
+      if (state.textContent) {
+        this.textTarget.textContent = state.textContent;
+      }
+      if (state.center === true) {
+        let footer = this.rootComponent.footerTarget;
+        footer.classList.remove('justify-content-between');
+        footer.classList.add('justify-content-center');
+      }
+      if (state.color) {
+        this.rootElement.style.color = state.color;
+      }
+    }
+
+  
+  });
+};

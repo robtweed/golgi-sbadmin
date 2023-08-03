@@ -1,1 +1,48 @@
-function load(t){let e="sbadmin-footer-text",o=-1;customElements.define(e,class extends HTMLElement{constructor(){super(),o++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML='<style>.txt-small{font-size:10px}</style><div class="txt-small" golgi:prop="textTag"></div>',this.name=e+"-"+o}setState(t){var e;t.name&&(this.name=t.name),t.text&&(this.rootElement.textContent=t.text),t.textContent&&(this.rootElement.textContent=t.textContent),!0===t.center&&((e=this.rootComponent.footerTarget).classList.remove("justify-content-between"),e.classList.add("justify-content-center")),t.color&&(this.rootElement.style.color=t.color)}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-footer-text';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_footer_text extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      this.attachShadow({ mode: 'open' });
+      const html = `
+<style>
+
+.txt-small {
+  font-size: 10px;
+}
+  
+</style>
+
+<div class="txt-small" golgi:prop="textTag"></div>
+  `;
+      this.shadowRoot.innerHTML = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+      if (state.text) {
+        this.rootElement.textContent = state.text;
+      }
+      if (state.textContent) {
+        this.rootElement.textContent = state.textContent;
+      }
+      if (state.center === true) {
+        let footer = this.rootComponent.footerTarget;
+        footer.classList.remove('justify-content-between');
+        footer.classList.add('justify-content-center');
+      }
+      if (state.color) {
+        this.rootElement.style.color = state.color;
+      }
+
+    }
+
+  
+  });
+};

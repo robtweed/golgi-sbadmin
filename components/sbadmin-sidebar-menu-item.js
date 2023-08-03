@@ -1,1 +1,123 @@
-function load(e){let t="sbadmin-sidebar-menu-item",i=-1;customElements.define(t,class extends HTMLElement{constructor(){super(),i++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML='<style>.nav-link.active{font-weight:600;color:#0061f2}.nav-link{color:#212832;display:flex;align-items:center;line-height:normal;padding-top:.75rem;padding-bottom:.75rem;position:relative;padding:.5rem 1rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out}a{text-decoration:none;font-size:.9rem}.nav-link.active .nav-link-icon{color:#0061f2}.nav-link .nav-link-icon{color:#a7aeb8;margin-right:.5rem;font-size:.9rem;padding-right:.5rem;display:inline-flex}*,::after,::before{box-sizing:border-box}</style><a class="nav-link" golgi:prop="aTag" href="#" golgi:on_click="switchPage"><div golgi:prop="iconDiv" class="nav-link-icon"><i golgi:prop="iconElement"></i></div><span golgi:prop="textTarget"></span></a>',this.name=t+"-"+i}onBeforeState(){this.hasIcon=!0}setState(e){e.name&&(this.name=e.name),e.contentPage&&(this.contentPage=e.contentPage,this.rootComponent.addToPage2MenuMap(e.contentPage,this)),e.text&&(this.textTarget.textContent=e.text),e.iconName&&(this.iconElement.setAttribute("data-feather",e.iconName),this.iconName=e.iconName),e.iconName||(this.aTag.removeChild(this.iconDiv),this.hasIcon=!1),e.href&&(this.aTag.href=e.href),!0===e.active&&this.switchPage()}setActive(){this.aTag.classList.add("active")}setInactive(){this.aTag.classList.remove("active")}switchPage(){var e=this.rootComponent,t=e.getMenuItemActive();t&&t.setInactive(),this.setActive(),e.setMenuItemActive(this),e.switchToPage(this.contentPage),e.menuHidden&&e.rootElement.classList.toggle("sidenav-toggled")}onAfterHooks(){"undefined"!=typeof feather&&this.hasIcon&&this.context.toSVG(this.iconElement)}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-sidebar-menu-item';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_sidebar_menu_item extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      this.attachShadow({ mode: 'open' });
+      const html = `
+<style>
+
+.nav-link.active {
+  font-weight: 600;
+  color: #0061f2;
+}
+.nav-link {
+  color: #212832;
+  display: flex;
+  align-items: center;
+  line-height: normal;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  position: relative;
+  padding: 0.5rem 1rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+a {
+  text-decoration: none;
+  font-size: .9rem;
+}
+.nav-link.active .nav-link-icon {
+    color: #0061f2;
+}
+
+.nav-link .nav-link-icon {
+  color: #a7aeb8;
+  margin-right: 0.5rem;
+  font-size: .9rem;
+  padding-right: 0.5rem;
+  display: inline-flex;
+}
+
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+  
+</style>
+
+<a class="nav-link" golgi:prop="aTag" href="#" golgi:on_click="switchPage">
+  <div golgi:prop="iconDiv" class="nav-link-icon">
+    <i golgi:prop="iconElement"></i>
+  </div>
+  <span golgi:prop="textTarget"></span>
+</a>
+  `;
+      this.shadowRoot.innerHTML = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+
+    onBeforeState() {
+      this.hasIcon = true;
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+      if (state.contentPage) {
+        this.contentPage = state.contentPage;
+        this.rootComponent.addToPage2MenuMap(state.contentPage, this);
+      }
+      if (state.text) {
+        this.textTarget.textContent = state.text;
+      }
+      if (state.iconName) {
+        this.iconElement.setAttribute('data-feather', state.iconName);
+        this.iconName = state.iconName;
+      }
+      if (!state.iconName) {
+        this.aTag.removeChild(this.iconDiv);
+        this.hasIcon = false;
+      }
+      if (state.href) {
+        this.aTag.href = state.href;
+      }
+      if (state.active === true) {
+        this.switchPage();
+      }
+    }
+
+    setActive() {
+      this.aTag.classList.add('active');
+    }
+
+    setInactive() {
+      this.aTag.classList.remove('active');
+    }
+
+    switchPage() {
+      let root = this.rootComponent;
+      let activeMenuComponent = root.getMenuItemActive();
+      if (activeMenuComponent) {
+        activeMenuComponent.setInactive();
+      }
+      this.setActive();
+      root.setMenuItemActive(this);
+      root.switchToPage(this.contentPage);
+      if (root.menuHidden) {
+        root.rootElement.classList.toggle('sidenav-toggled');
+      }
+    }
+
+    onAfterHooks() {
+      if (typeof feather !== 'undefined' && this.hasIcon) {
+        this.context.toSVG(this.iconElement);
+      }
+    }
+
+  
+  });
+};

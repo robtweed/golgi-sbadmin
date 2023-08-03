@@ -12,6 +12,10 @@ button {
   text-transform: none;
 }
 
+:host(.btn-group) {
+  color: red;
+}
+
 button:focus:not(:focus-visible) {
   outline: 0;
 }
@@ -2081,6 +2085,14 @@ button:focus:not(:focus-visible) {
   margin-right: auto;
 }
 
+.pull-right {
+  float: right
+}
+
+.pull-left {
+  float: left
+}
+
 .position-static {
   position: static !important;
 }
@@ -2877,6 +2889,22 @@ button:focus:not(:focus-visible) {
     box-sizing: border-box;
 }
 
+.flat-right-side {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.flat-left-side {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.grouped {
+  position: relative;
+  flex: 1 1 auto;
+}
+
+
   `,
   html: `
 <button type="button" class="btn" golgi:prop="button" golgi:on_click="onClicked"></button>
@@ -2942,6 +2970,28 @@ button:focus:not(:focus-visible) {
 
     onBeforeState() {
       this.form = this.getParentComponent('sbadmin-form');
+
+      let btnGroup = this.getParentComponent('sbadmin-button-group');
+      console.log('***** btnGroup ***');
+      console.log(btnGroup);
+      if (btnGroup) {
+        this.cls = 'grouped';
+        let btnArr = btnGroup.buttons;
+        if (!this.button.classList.contains('d-none')) {
+          if (btnArr.length > 0) {
+            //flatten right-hand edge of previous button
+
+            let prevBtn = btnArr[btnArr.length - 1];
+            prevBtn.cls = 'flat-right-side';
+
+            // flatten left edge of current button
+
+            this.cls = 'flat-left-side';  
+          }
+        }
+        btnArr.push(this);
+      }
+
     }
 
     show() {

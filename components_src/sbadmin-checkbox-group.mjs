@@ -134,11 +134,15 @@ label-hidden {
           this.label.textContent = state.title;
         }
         if (state.switch) {
-          cb.isSwitch();
+          cb.switch = true;
         }
         if (state.offValue) {
           this.offValue = state.offValue;
         }
+        if (state.checked) {
+          cb.check();
+        }
+        this.cb = cb;
         return;
       }
       if (state.label) {

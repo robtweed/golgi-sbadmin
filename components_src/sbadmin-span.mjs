@@ -1,18 +1,8 @@
 let def = {
-  name: 'sbadmin-div',
-  useShadowDOM: true,
+  name: 'sbadmin-span',
 
-  css: `
-.clearfix {
-  display: block;
-  clear: both;
-  content: "";
-}
-  `,
   html: `
-<div>
-  <span golgi:prop="spanTag"></span>
-</div>
+  <span></span>
   `,
 
   methods: `
@@ -21,15 +11,12 @@ let def = {
         this.name = state.name;
       }
       if (state.text) {
-        this.spanTag.textContent = state.text;
-      }
-      if (state.cls) {
-        this.rootElement.classList.add(state.cls);
+        this.rootElement.textContent = state.text;
       }
     }
 
     set text(value) {
-      this.spanTag.textContent = value;
+      this.rootElement.textContent = value;
     }
 
     show() {

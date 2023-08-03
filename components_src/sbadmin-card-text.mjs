@@ -10,6 +10,61 @@ let def = {
   --bs-text-opacity: 1;
   color: #6c757d !important;
 }
+.font-monospace {
+  font-family: var(--bs-font-monospace) !important;
+}
+
+.fs-1 {
+  font-size: calc(1.275rem + 0.3vw) !important;
+}
+
+.fs-2 {
+  font-size: calc(1.265rem + 0.18vw) !important;
+}
+
+.fs-3 {
+  font-size: calc(1.255rem + 0.06vw) !important;
+}
+
+.fs-4 {
+  font-size: 1.2rem !important;
+}
+
+.fs-5 {
+  font-size: 1.1rem !important;
+}
+
+.fs-6 {
+  font-size: 1rem !important;
+}
+
+.fst-italic {
+  font-style: italic !important;
+}
+
+.fst-normal {
+  font-style: normal !important;
+}
+
+.fw-light {
+  font-weight: 300 !important;
+}
+
+.fw-lighter {
+  font-weight: lighter !important;
+}
+
+.fw-normal {
+  font-weight: 400 !important;
+}
+
+.fw-bold {
+  font-weight: 500 !important;
+}
+
+.fw-bolder {
+  font-weight: bolder !important;
+}
   `,
 
   html: `
@@ -33,16 +88,22 @@ let def = {
         this.rootElement.appendChild(el);
       }
       if (state.textContent) {
-        this.setText(state.textContent);
+        this.rootElement.textContent = state.textContent;
+      }
+      if (state.cls) {
+        this.rootElement.classList.add(state.cls);
+      }
+      if (state.fontSize) {
+        this.fontSize = state.fontSize;
       }
     }
 
-    setText(text) {
+    set text(text) {
       if (this.rootComponent.useShowdown && typeof showdown === 'undefined') {
         this.rootElement.textContent = text;
         let _this = this;
         setTimeout(function() {
-          _this.setText(text);
+          _this.text = text;
         }, 100);
         return;
       }
@@ -52,6 +113,15 @@ let def = {
       }
       else {
         this.rootElement.textContent = text;
+      }
+    }
+
+    set fontSize(size) {
+      if (size.includes('pt')) {
+        this.rootElement.style = 'font-size: ' + size + ';';
+      }
+      else{
+        this.rootElement.classList.add('fs-' + size);
       }
     }
 

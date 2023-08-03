@@ -1,1 +1,43 @@
-function load(t){let e="sbadmin-image",s=-1;customElements.define(e,class extends HTMLElement{constructor(){super(),s++;this.html="<img>",this.name=e+"-"+s}setState(t){t.name&&(this.name=t.name),t.src&&(this.rootElement.src=t.src)}setSrc(t){this.rootElement.src=t}set src(t){this.rootElement.src=t}set cls(t){this.rootElement.classList.add(t)}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-image';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_image extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      const html = `
+<img alt="" />
+  `;
+      this.html = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+      if (state.src) {
+        this.rootElement.src = state.src;
+      }
+    }
+
+    setSrc(src) {
+      this.rootElement.src = src;
+    }
+
+    set src(src) {
+      this.rootElement.src = src;
+    }
+
+    set cls(cls) {
+      this.rootElement.classList.add(cls);
+    }
+
+    set alt(value) {
+      this.rootElement.setAttribute('alt', value);
+    }
+
+  
+  });
+};

@@ -1,1 +1,56 @@
-function load(e){let t="sbadmin-content-page",o=-1;customElements.define(t,class extends HTMLElement{constructor(){super(),o++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML='<style>.collapse:not(.show){display:none}*,::after,::before{box-sizing:border-box}</style><div class="collapse multi-collapse"></div>',this.name=t+"-"+o}setState(e){e.name&&(this.name=e.name)}show(){this.rootElement.classList.add("show")}hide(){this.rootElement.classList.remove("show")}onBeforeHooks(){this.name=this.context.assemblyName,this.rootComponent.contentPages.set(this.name,this);this.onSelected=function(e){(window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth)<992&&this.rootComponent.rootElement.classList.toggle("sidenav-toggled")}}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-content-page';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_content_page extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      this.attachShadow({ mode: 'open' });
+      const html = `
+<style>
+
+.collapse:not(.show) {
+    display: none;
+}
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+  
+</style>
+
+<div class="collapse multi-collapse"></div>
+  `;
+      this.shadowRoot.innerHTML = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+    }
+
+    show() {
+      this.rootElement.classList.add('show');
+    }
+
+    hide() {
+      this.rootElement.classList.remove('show');
+    }
+
+    onBeforeHooks() {
+      this.name = this.context.assemblyName;
+      this.rootComponent.contentPages.set(this.name, this);
+      this.onSelected = function(obj) {
+        let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        if (w < 992) {
+          this.rootComponent.rootElement.classList.remove('sidenav-toggled');
+        }
+        this.emit('selected', this);
+      };
+    }
+
+  
+  });
+};

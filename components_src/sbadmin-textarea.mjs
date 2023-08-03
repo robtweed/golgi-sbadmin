@@ -251,7 +251,7 @@ label-hidden {
 
   html: `
 <label class="form-label" golgi:prop="label"></label>
-<textarea class="form-control" golgi:prop="textarea" golgi:on_input="onChanged"></select>
+<textarea class="form-control" golgi:prop="textarea" golgi:on_input="onChanged"></textarea>
   `,
 
   methods: `

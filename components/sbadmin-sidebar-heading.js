@@ -1,1 +1,45 @@
-function load(e){let t="sbadmin-sidebar-heading",n=-1;customElements.define(t,class extends HTMLElement{constructor(){super(),n++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML='<style>.sidenav-menu-heading{padding:1.75rem 1rem .75rem;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#a7aeb8;list-style:none}*,::after,::before{box-sizing:border-box}</style><div class="sidenav-menu-heading"></div>',this.name=t+"-"+n}setState(e){e.name&&(this.name=e.name),e.text&&(this.rootElement.textContent=e.text)}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-sidebar-heading';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_sidebar_heading extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      this.attachShadow({ mode: 'open' });
+      const html = `
+<style>
+
+.sidenav-menu-heading {
+  padding: 1.75rem 1rem 0.75rem;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #a7aeb8;
+  list-style: none;
+}
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+  
+</style>
+
+<div class="sidenav-menu-heading"></div>
+  `;
+      this.shadowRoot.innerHTML = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+      if (state.text) {
+        this.rootElement.textContent = state.text;
+      }
+    }
+
+  
+  });
+};

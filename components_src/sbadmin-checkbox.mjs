@@ -42,6 +42,7 @@ let def = {
       }
       if (state.switch) {
         this.rootElement.classList.add('form-switch');
+        this.isSwitch = true;
       }
 
     }
@@ -59,8 +60,15 @@ let def = {
       this.checkboxGroup.form.emit('changed', this.checkboxGroup);
     }
 
-    isSwitch() {
-      this.rootElement.classList.add('form-switch');
+    set switch(value) {
+      if (value) {
+        this.rootElement.classList.add('form-switch');
+        this.isSwitch = true;
+      }
+      else {
+        this.rootElement.classList.remove('form-switch');
+        this.isSwitch = false;
+      }
     }
 
     set labelText(text) {
@@ -116,6 +124,7 @@ let def = {
       }
       this.checkbox.id = name;
       this.label.setAttribute('for', name);
+      this.isSwitch = false;
     }
 
   `

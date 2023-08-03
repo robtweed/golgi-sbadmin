@@ -29,6 +29,7 @@ let def = {
 
     onBeforeState() {
       this.childrenTarget.id = 'sideNav_' + this.name;
+      this.style = 'flex-grow: 1;';
     }
 
   `

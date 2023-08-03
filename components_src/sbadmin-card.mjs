@@ -68,6 +68,11 @@ div {
     border: 1px solid rgba(33,40,50,0.125);
     border-radius: 0.35rem;
 }
+
+.card-center {
+  margin: auto;
+}
+
 .bg-primary {
   --bs-bg-opacity: 1;
   background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
@@ -301,13 +306,13 @@ div {
         this.rootElement.classList.add('h-100');
       }
       if (state.width) {
-        if (state.width.toString().includes('%')) {
+        if (Number.isInteger(+state.width)) {
+          this.rootElement.classList.add('w-' + state.width);
+        }
+        else {
           let style = '';
           if (this.rootElement.getAttribute('style')) style = this.rootElement.getAttribute('style');
           this.rootElement.setAttribute('style', style + 'width: ' + state.width + ';');
-        }
-        else {
-          this.rootElement.classList.add('w-' + state.width);
         }
       }
       if (state.textAlign) {
@@ -320,11 +325,31 @@ div {
       }
       if (state.position === 'center') {
         let style = '';
-        if (this.rootElement.getAttribute('style')) style = this.rootElement.getAttribute('style');
-        this.rootElement.setAttribute('style', style + 'margin: auto;');
+        if (this.getAttribute('style')) style = this.getAttribute('style');
+        this.setAttribute('style', style + 'margin-left: auto; margin-right: auto;');
+        this.rootElement.classList.add('card-center');
       }
       if (state.cls) {
-        this.rootElement.classList.add(state.cls);
+        let clsArr = state.cls.split(' ');
+        let _this = this;
+        clsArr.forEach(function(cl) {
+          _this.rootElement.classList.add(cl);
+        });
+      }
+      if (state.margin) {
+        let style = '';
+        if (this.getAttribute('style')) style = this.getAttribute('style');
+        this.setAttribute('style', style + 'margin: ' + state.margin + ';');
+      }
+      if (state.topMargin) {
+        let style = '';
+        if (this.getAttribute('style')) style = this.getAttribute('style');
+        this.setAttribute('style', style + 'margin-top: ' + state.topMargin + ';');
+      }
+      if (state.bottomMargin) {
+        let style = '';
+        if (this.getAttribute('style')) style = this.getAttribute('style');
+        this.setAttribute('style', style + 'margin-bottom: ' + state.bottomMargin + ';');
       }
     }
 

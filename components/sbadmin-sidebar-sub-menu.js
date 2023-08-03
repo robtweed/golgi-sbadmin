@@ -1,1 +1,143 @@
-function load(e){let a="sbadmin-sidebar-sub-menu",t=-1;customElements.define(a,class extends HTMLElement{constructor(){super(),t++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML='<style>.nav-link.active{font-weight:600;color:#0061f2}.nav-link{color:#212832;display:flex;align-items:center;line-height:normal;padding-top:.75rem;padding-bottom:.75rem;position:relative;padding:.5rem 1rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out}a{text-decoration:none;font-size:.9rem}.nav-link.active .nav-link-icon{color:#0061f2}.nav-link .nav-link-icon{color:#a7aeb8;margin-right:.5rem;font-size:.9rem;padding-right:.5rem;display:inline-flex}.nav-link.collapsed .sidenav-collapse-arrow{transform:rotate(-90deg)}.nav-link .sidenav-collapse-arrow{display:inline-block;margin-left:auto;transition:transform .15s ease;color:#a7aeb8}.sidenav-menu-nested{flex-direction:column;margin-left:1.4375rem;border-left-style:solid;border-left-width:thin;padding-left:.5625rem;border-left-color:#d4dae3}.nav{flex-direction:column;flex-wrap:nowrap;display:flex;margin-bottom:0;list-style:none}.collapse:not(.show){display:none}.feather{height:1rem;width:1rem;vertical-align:top}*,::after,::before{box-sizing:border-box}</style><a class="nav-link collapsed" href="javascript:void(0);" golgi:prop="aTag" data-bs-toggle="collapse" aria-expanded="false" golgi:on_click="toggle"><span golgi:prop="spanTag"></span><div class="sidenav-collapse-arrow"><i data-feather="chevron-down" golgi:prop="chevronTag"></i></div></a><div class="collapse" golgi:prop="collapseDiv"><nav class="sidenav-menu-nested nav accordion" golgi:prop="childrenTarget"></nav></div>',this.name=a+"-"+t}setState(e){e.name&&(this.name=e.name),e.text&&(this.spanTag.textContent=e.text),e.isLeafMenu&&this.childrenTarget.classList.remove("accordion")}onBeforeState(){var e="collapse_"+this.name;this.collapseDiv.id=e,this.aTag.setAttribute("data-bs-target","#"+e),this.aTag.setAttribute("aria-controls",e),this.childrenTarget.id="subMenu_"+this.name;let a=this.getParentComponent("sbadmin-sidebar-sub-menu");(a=a||this.getParentComponent("sbadmin-sidebar-nested-menu"))&&(e=a.childrenTarget.id,this.collapseDiv.setAttribute("data-bs-parent","#"+e))}onAfterHooks(){"undefined"!=typeof feather&&this.context.toSVG(this.chevronTag)}toggle(){this.aTag.classList.toggle("collapsed");var e="true"===this.aTag.getAttribute("aria-expanded");this.aTag.setAttribute("aria-expanded",!e),this.collapseDiv.classList.toggle("show")}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-sidebar-sub-menu';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_sidebar_sub_menu extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      this.attachShadow({ mode: 'open' });
+      const html = `
+<style>
+
+.nav-link.active {
+  font-weight: 600;
+  color: #0061f2;
+}
+.nav-link {
+  color: #212832;
+  display: flex;
+  align-items: center;
+  line-height: normal;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  position: relative;
+  padding: 0.5rem 1rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+a {
+  text-decoration: none;
+  font-size: .9rem;
+}
+.nav-link.active .nav-link-icon {
+    color: #0061f2;
+}
+
+.nav-link .nav-link-icon {
+  color: #a7aeb8;
+  margin-right: 0.5rem;
+  font-size: .9rem;
+  padding-right: 0.5rem;
+  display: inline-flex;
+}
+
+.nav-link.collapsed .sidenav-collapse-arrow {
+  transform: rotate(-90deg);
+}
+
+.nav-link .sidenav-collapse-arrow {
+    display: inline-block;
+    margin-left: auto;
+    transition: transform .15s ease;
+    color: #a7aeb8;
+}
+.sidenav-menu-nested {
+    flex-direction: column;
+    margin-left: 1.4375rem;
+    border-left-style: solid;
+    border-left-width: thin;
+    padding-left: 0.5625rem;
+    border-left-color: #d4dae3;
+}
+.nav {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    display: flex;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.collapse:not(.show) {
+  display: none;
+}
+
+.feather {
+    height: 1rem;
+    width: 1rem;
+    vertical-align: top;
+}
+
+*, ::before, ::after {
+    box-sizing: border-box;
+}
+  
+</style>
+
+<a class="nav-link collapsed" href="javascript:void(0);" golgi:prop="aTag" data-bs-toggle="collapse" aria-expanded="false" golgi:on_click="toggle">
+  <span golgi:prop="spanTag"></span>
+  <div class="sidenav-collapse-arrow">
+    <i data-feather="chevron-down" golgi:prop="chevronTag"></i>
+  </div>
+</a>
+<div class="collapse" golgi:prop="collapseDiv">
+  <nav class="sidenav-menu-nested nav accordion" golgi:prop="childrenTarget">
+</div>
+  `;
+      this.shadowRoot.innerHTML = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+      if (state.text) {
+        this.spanTag.textContent = state.text;
+      }
+      if (state.isLeafMenu) {
+        this.childrenTarget.classList.remove('accordion');
+      }
+    }
+
+    onBeforeState() {
+      // add the various cross-linked id references
+      let id = "collapse_" + this.name;
+      this.collapseDiv.id = id;
+      this.aTag.setAttribute('data-bs-target', '#' + id);
+      this.aTag.setAttribute('aria-controls', id);
+      this.childrenTarget.id = "subMenu_" + this.name;
+      let parentMenu = this.getParentComponent('sbadmin-sidebar-sub-menu');
+      if (!parentMenu) parentMenu = this.getParentComponent('sbadmin-sidebar-nested-menu');
+      if (parentMenu) {
+        id = parentMenu.childrenTarget.id;
+        this.collapseDiv.setAttribute('data-bs-parent', '#' + id);
+      }
+    }
+
+    onAfterHooks() {
+      if (typeof feather !== 'undefined') {
+        this.context.toSVG(this.chevronTag);
+      }
+    }
+
+    toggle() {
+      this.aTag.classList.toggle('collapsed');
+      let af = this.aTag.getAttribute('aria-expanded') === 'true';
+      this.aTag.setAttribute('aria-expanded', !af);
+      this.collapseDiv.classList.toggle('show');
+    }
+
+  
+  });
+};

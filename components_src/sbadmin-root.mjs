@@ -305,7 +305,11 @@ small, .small {
       if (typeof feather !== 'undefined') {
         const name = element.getAttribute('data-feather');
         if (name) {
-          const svgString = feather.icons[name].toSvg();
+          let icon = feather.icons[name];
+          if (!icon) {
+            icon = feather.icons['help-circle'];
+          }
+          const svgString = icon.toSvg();
           const svgDocument = new DOMParser().parseFromString(
             svgString,
             'image/svg+xml',

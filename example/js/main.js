@@ -10,29 +10,12 @@
   //  This example is designed to run directly from the /example folder in the Github repo
   //  so we add /example to the window.location.origin. Adjust as required for your own setup
 
-  // We're also adding a toSVG() method to the context, for use with components that use
-  //  Feather.js icons.
-
   let urlRoot = window.location.origin + '/golgi-sbadmin/example';
   let context = {
     componentPaths: {
       sbadmin: 'https://robtweed.github.io/golgi-sbadmin/components/'
     },
-    assemblyPath: urlRoot + '/js/assemblies/',
-    toSVG: function(element) {
-      if (typeof feather !== 'undefined') {
-        const name = element.getAttribute('data-feather');
-        if (name) {
-          const svgString = feather.icons[name].toSvg();
-          const svgDocument = new DOMParser().parseFromString(
-            svgString,
-            'image/svg+xml',
-          );
-          const svgElement = svgDocument.querySelector('svg');
-          element.parentNode.replaceChild(svgElement, element);
-        }
-      }
-    } 
+    assemblyPath: urlRoot + '/js/assemblies/' 
   };
 
   //  Uncomment this if you want to enable Golgi's console log:
@@ -40,9 +23,9 @@
   // golgi.setLog(true);
 
   // fetch the pre-bundled sbadmin components and instantiate them.
-  //  Note: don't await this but let it run asynchronously in the background
+  //   comment this out to load each one dynamically only when needed (slower if on a slow network)
 
-  await golgi.fetch_optimised_components('sbadmin', context);
+  await golgi.fetch_optimised_components(context, urlRoot + '/js/components/golgi-components.js')
 
   // now render the root assembly, which will start everything off.  
   //  Note that due to the previous command, by the time the

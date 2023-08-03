@@ -233,6 +233,17 @@ button {
       if (state.operation === 'manual') {
         this.rootElement.setAttribute('data-bs-interval', "false");
       }
+      if (state.operation === 'auto') {
+        this.rootElement.setAttribute('data-bs-ride', "carousel");
+        this.rootElement.removeAttribute('data-bs-interval');
+        if (state.interval) {
+          // re-create carousel object with new interval);
+          this.carousel = new bootstrap.Carousel(this.rootElement, {
+            interval: state.interval * 1000
+          });
+        }
+        this.carousel.cycle();
+      }
     }
 
     onBeforeState() {
@@ -241,8 +252,23 @@ button {
       this.leftBtn.setAttribute('data-bs-target', '#' + id);
       this.rightBtn.setAttribute('data-bs-target', '#' + id);
       this.carousel = new bootstrap.Carousel(this.rootElement, {
-        interval: false
+        interval: 2000
       });
+
+      let _this = this;
+
+      let fn = function (evt) {
+        if (evt.relatedTarget) {
+          let carouselItem = evt.relatedTarget.parentNode;
+          _this.emit('slide', carouselItem);
+        }
+      };
+      this.addHandler(fn, 'slid.bs.carousel');
+
+      let ul = function() {
+        _this.carousel.dispose()
+      };
+      this.registerUnloadMethod(ul);
     }
 
     next(evt) {

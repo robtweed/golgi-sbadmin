@@ -1,1 +1,44 @@
-function load(t){let e="sbadmin-carousel-item",s=-1;customElements.define(e,class extends HTMLElement{constructor(){super(),s++;this.html='<div class="carousel-item"></div>',this.name=e+"-"+s}setState(t){t.name&&(this.name=t.name),t.active&&this.rootElement.classList.add("active"),t.cls&&this.classList.add(t.cls),void 0!==t.interval&&this.setAttribute("data-bs-interval",t.interval)}set active(t){t?this.rootElement.classList.add("active"):this.rootElement.classList.remove("active")}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-carousel-item';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_carousel_item extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      const html = `
+<div class="carousel-item"></div>
+      `;
+      this.html = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+      if (state.active) {
+        this.rootElement.classList.add('active');
+      }
+
+      if (state.cls) {
+        this.classList.add(state.cls);
+      }
+
+      if (typeof state.interval !== 'undefined') {
+        this.setAttribute('data-bs-interval', state.interval);
+      }
+
+    }
+
+    set active(value) {
+      if (value) {
+        this.rootElement.classList.add('active');      }
+      else {
+        this.rootElement.classList.remove('active');
+      }
+    }
+
+  
+  });
+};

@@ -2,7 +2,7 @@ let def = {
   name: 'sbadmin-image',
 
   html: `
-<img />
+<img alt="" />
   `,
 
   methods: `
@@ -25,6 +25,10 @@ let def = {
 
     set cls(cls) {
       this.rootElement.classList.add(cls);
+    }
+
+    set alt(value) {
+      this.rootElement.setAttribute('alt', value);
     }
 
   `

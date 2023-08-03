@@ -33,12 +33,12 @@ let def = {
     onBeforeHooks() {
       this.name = this.context.assemblyName;
       this.rootComponent.contentPages.set(this.name, this);
-      let _this = this;
       this.onSelected = function(obj) {
         let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         if (w < 992) {
-          this.rootComponent.rootElement.classList.toggle('sidenav-toggled');
+          this.rootComponent.rootElement.classList.remove('sidenav-toggled');
         }
+        this.emit('selected', this);
       };
     }
 

@@ -1,1 +1,112 @@
-function load(e){let i="sbadmin-radio",a=-1;customElements.define(i,class extends HTMLElement{constructor(){super(),a++;this.html='<div class="form-check"><input class="form-check-input" type="radio" golgi:prop="radio" golgi:on_click="onClicked"> <label class="form-check-label" golgi:prop="label"></label></div>',this.name=i+"-"+a}setState(e){e.name&&(this.name=e.name),void 0===e.label?(this.label.className="label-hidden",this.rootElement.classList.remove("form-check")):this.label.textContent=e.label,e.readonly&&(this.radio.readOnly=!0),e.disabled&&(this.radio.disabled=!0),e.value&&(this.radio.value=e.value),e.checked&&(this.radio.checked=!0,this.onClicked()),e.inline&&this.rootElement.classList.add("form-check-inline"),e.cls&&(this.radio.className=e.cls),e.labelcls&&(this.label.className=e.labelcls)}onClicked(){this.radioGroup&&(this.radioGroup.value=this.value,this.radioGroup.form.emit("changed",this.radioGroup))}set value(e){this.radio.value=e}get value(){return this.radio.value}get isChecked(){return this.radio.checked}check(){this.radio.checked=!0,this.onClicked()}get checked(){return this.radio.checked}readonly(){this.radio.readOnly=!0}disable(){this.radio.disabled=!0}enable(){this.radio.disabled=!1,this.radio.readOnly=!1}onBeforeState(){var e=this.name+"";this.radioGroup=this.getParentComponent("sbadmin-radio-group"),this.radioGroup&&(this.radio.name=this.radioGroup.name,this.radioGroup.optionsByName.set(e,this),this.radioGroup.radios.push(this),this.radioGroup.count++),this.radio.id=e,this.label.setAttribute("for",e)}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-radio';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_radio extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      const html = `
+<div class="form-check">
+  <input class="form-check-input" type="radio" golgi:prop="radio" golgi:on_click="onClicked">
+  <label class="form-check-label" golgi:prop="label"></label>
+</div>
+  `;
+      this.html = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+
+      if (typeof state.label === 'undefined') {
+        this.label.className = 'label-hidden';
+        this.rootElement.classList.remove('form-check');
+      }
+      else {
+        this.label.textContent = state.label;
+      }
+      if (state.readonly) {
+        this.radio.readOnly = true;
+      }
+      if (state.disabled) {
+        this.radio.disabled = true;
+      }
+      if (state.value) {
+        this.radio.value = state.value;
+      }
+      if (state.checked) {
+        this.radio.checked = true;
+        this.onClicked();
+      }
+      if (state.inline) {
+        this.rootElement.classList.add('form-check-inline');
+      }
+      if (state.cls) {
+        this.radio.className = state.cls;
+      }
+      if (state.labelcls) {
+        this.label.className = state.labelcls;
+      }
+
+    }
+
+    onClicked() {
+      if (this.radioGroup) {
+        this.radioGroup.value = this.value;
+        this.radioGroup.form.emit('changed', this.radioGroup);
+      }
+    }
+
+    set value(value) {
+      this.radio.value = value;
+    }
+
+    get value() {
+      return this.radio.value;
+    }
+
+    get isChecked() {
+      return this.radio.checked;
+    }
+
+    check() {
+      this.radio.checked = true;
+      this.onClicked();
+    }
+
+    get checked() {
+      return this.radio.checked;
+    }
+
+    readonly() {
+      this.radio.readOnly = true;
+    }
+
+    disable() {
+      this.radio.disabled = true;
+    }
+
+    enable() {
+      this.radio.disabled = false;
+      this.radio.readOnly = false;
+    }
+
+    onBeforeState() {
+      let name = this.name + '';
+      this.radioGroup = this.getParentComponent('sbadmin-radio-group');
+      if (this.radioGroup) {
+        this.radio.name = this.radioGroup.name;
+        this.radioGroup.optionsByName.set(name, this);
+        this.radioGroup.radios.push(this);
+        this.radioGroup.count++;
+      }
+      this.radio.id = name;
+      this.label.setAttribute('for', name);
+    }
+
+  
+  });
+};

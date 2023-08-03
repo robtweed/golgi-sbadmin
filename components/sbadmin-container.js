@@ -1,1 +1,86 @@
-function load(t){let n="sbadmin-container",i=-1;customElements.define(n,class extends HTMLElement{constructor(){super(),i++,this.attachShadow({mode:"open"});this.shadowRoot.innerHTML='<style>.container,.container-fluid,.container-lg,.container-md,.container-sm,.container-xl,.container-xxl{--bs-gutter-x:1.5rem;width:100%;padding-right:var(--bs-gutter-x,.75rem);padding-left:var(--bs-gutter-x,.75rem);margin-right:auto;margin-left:auto}@media (min-width:576px){.container,.container-sm{max-width:540px}}@media (min-width:768px){.container,.container-md,.container-sm{max-width:720px}}@media (min-width:992px){.container,.container-lg,.container-md,.container-sm{max-width:960px}}@media (min-width:1200px){.container,.container-lg,.container-md,.container-sm,.container-xl{max-width:1140px}}@media (min-width:1500px){.container,.container-lg,.container-md,.container-sm,.container-xl,.container-xxl{max-width:1440px}}</style><div class="container">',this.name=n+"-"+i}setState(t){if(t.name&&(this.name=t.name),t.size&&(this.classList.remove("container"),this.classList.add("container-"+t.size)),t.cls){t=t.cls.split(" ");let n=this;t.forEach(function(t){n.rootElement.classList.add(t)})}}set cls(t){this.setState({cls:t})}})}export{load};
+export function load(ctx) {
+  let componentName = 'sbadmin-container';
+  let count = -1;
+  customElements.define(componentName, class sbadmin_container extends HTMLElement {
+    constructor() {
+      super();
+      count++;
+      this.attachShadow({ mode: 'open' });
+      const html = `
+<style>
+
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+  --bs-gutter-x: 1.5rem;
+  width: 100%;
+  padding-right: var(--bs-gutter-x, 0.75rem);
+  padding-left: var(--bs-gutter-x, 0.75rem);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .container-sm, .container {
+    max-width: 540px;
+  }
+}
+@media (min-width: 768px) {
+  .container-md, .container-sm, .container {
+    max-width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .container-lg, .container-md, .container-sm, .container {
+    max-width: 960px;
+  }
+}
+@media (min-width: 1200px) {
+  .container-xl, .container-lg, .container-md, .container-sm, .container {
+    max-width: 1140px;
+  }
+}
+@media (min-width: 1500px) {
+  .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
+    max-width: 1440px;
+  }
+}
+
+  
+</style>
+
+<div class="container" />
+  `;
+      this.shadowRoot.innerHTML = `${html}`;
+      this.name = componentName + '-' + count;
+      
+    }
+
+    setState(state) {
+      if (state.name) {
+        this.name = state.name;
+      }
+      if (state.size) {
+        this.classList.remove('container');
+        this.classList.add('container-' + state.size);
+      }
+      if (state.cls) {
+        let clsArr = state.cls.split(' ');
+        let _this = this;
+        clsArr.forEach(function(cl) {
+          _this.rootElement.classList.add(cl);
+        });
+      }
+    }
+
+    set cls(value) {
+      this.setState({cls: value});
+    }
+
+  
+  });
+};
