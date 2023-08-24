@@ -76,7 +76,7 @@ a {
   `,
 
   html: `
-<a class="nav-link collapsed" href="javascript:void(0);" golgi:prop="aTag" data-bs-toggle="collapse" aria-expanded="false" golgi:on_click="toggle">
+<a class="nav-link collapsed" href="javascript:void(0);" golgi:prop="aTag" data-bs-toggle="collapse" aria-expanded="false" golgi:on_click="click">
   <div class="nav-link-icon">
     <i golgi:prop="iTag"></i>
   </div>
@@ -104,6 +104,15 @@ a {
       }
     }
 
+    set text(value) {
+      this.spanTag.textContent = value;
+    }
+
+    set icon(value) {
+      this.iTag.setAttribute('data-feather', value);
+      this.iconName = value;
+    }
+
     onBeforeState() {
       // add the various cross-linked id references
       let id = "collapse_" + this.name;
@@ -123,10 +132,47 @@ a {
     }
 
     toggle() {
-      this.aTag.classList.toggle('collapsed');
-      let af = this.aTag.getAttribute('aria-expanded') === 'true';
-      this.aTag.setAttribute('aria-expanded', !af);
-      this.collapseDiv.classList.toggle('show');
+      this.switchToActive();
+      this.emit('menuItemSelected', this);
+    }
+
+    expand() {
+      this.aTag.classList.remove('collapsed');
+      this.aTag.setAttribute('aria-expanded', true);
+      this.collapseDiv.classList.add('show');
+    }
+
+    collapse() {
+      this.aTag.classList.add('collapsed');
+      this.aTag.setAttribute('aria-expanded', false);
+      this.collapseDiv.classList.remove('show');
+    }
+
+    set isActive(active) {
+      if (active) {
+        this.aTag.classList.add('active');
+      }
+      else {
+        this.aTag.classList.remove('active');
+      }
+    }
+
+    click() {
+      this.switchToActive(true);
+    }
+
+    switchToActive(click) {
+      let root = this.rootComponent;
+      let activeMenuComponent = root.getMenuItemActive();
+      if (activeMenuComponent) {
+        activeMenuComponent.isActive = false;
+      }
+      this.isActive = true;
+      root.setMenuItemActive(this);
+      if (root.menuHidden) {
+        root.rootElement.classList.toggle('sidenav-toggled');
+      }
+      this.emit('menuItemSelected', activeMenuComponent);
     }
 
   `

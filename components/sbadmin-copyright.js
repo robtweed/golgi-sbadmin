@@ -12,10 +12,15 @@ export function load(ctx) {
 .txt-small {
   font-size: 10px;
 }
+
+.inline {
+  display: inline-flex
+}
+
   
 </style>
 
-<p class="txt-small">
+<p class="txt-small inline">
   <span>Copyright &copy; </span>
   <span golgi:prop="textTarget" />
 </p>
@@ -43,6 +48,10 @@ export function load(ctx) {
       if (state.color) {
         this.rootElement.style.color = state.color;
       }
+    }
+
+    set text(value) {
+      this.textTarget.textContent = value;
     }
 
   

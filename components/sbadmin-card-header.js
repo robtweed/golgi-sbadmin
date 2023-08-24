@@ -93,10 +93,21 @@ h5 {
       if (state.textContent) {
         this.rootElement.textContent = state.textContent;
       }
+      if (state.textalign) {
+        this.rootElement.style.textAlign = state.textalign;
+      }
     }
 
     setText(text) {
       this.rootElement.textContent = text;
+    }
+
+    set text(value) {
+      this.rootElement.textContent = value;
+    }
+
+    set textAlign(value) {
+      this.rootElement.style.textAlign = value;
     }
 
   

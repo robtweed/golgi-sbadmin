@@ -288,6 +288,39 @@ button {
       this.carousel.prev();
     }
 
+    removeItems() {
+      let items = [...this.childrenTarget.children];
+      for (let item of items) {
+        item.remove();
+      }
+    }
+
+    getItem(index) {
+      let items = [...this.childrenTarget.children];
+      return items[index];
+    }
+
+    get countItems() {
+      let items = [...this.childrenTarget.children];
+      return items.length;
+    }
+
+    get items() {
+      return [...this.childrenTarget.children];
+    }
+
+    async addItem(assemblyName) {
+      let itemComponent = await this.renderComponent('sbadmin-carousel-item', this.childrenTarget, this.context);
+      if (assemblyName) {
+        let rootComponent = await this.renderAssembly(assemblyName, itemComponent.childrenTarget, this.context);
+        for (let name in rootComponent.refs) {
+          itemComponent[name] = rootComponent.refs[name];
+        }
+        itemComponent.content = rootComponent;
+      }
+      return itemComponent;
+    }
+
   
   });
 };

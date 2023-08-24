@@ -39,6 +39,11 @@ export function load(ctx) {
       }
     }
 
+    get itemNo() {
+      let carousel = this.getParentComponent('sbadmin-carousel');
+      return carousel.items.indexOf(this);
+    }
+
   
   });
 };

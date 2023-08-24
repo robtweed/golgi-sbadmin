@@ -12,10 +12,14 @@ export function load(ctx) {
 .txt-small {
   font-size: 10px;
 }
+
+.inline {
+  display: inline-flex
+}
   
 </style>
 
-<div class="txt-small" golgi:prop="textTag"></div>
+<div class="txt-small inline" golgi:prop="textTag"></div>
   `;
       this.shadowRoot.innerHTML = `${html}`;
       this.name = componentName + '-' + count;
@@ -42,6 +46,11 @@ export function load(ctx) {
       }
 
     }
+
+    set text(value) {
+      this.rootElement.textContent = value;
+    }
+
 
   
   });

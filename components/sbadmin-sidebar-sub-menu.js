@@ -136,6 +136,27 @@ a {
       let af = this.aTag.getAttribute('aria-expanded') === 'true';
       this.aTag.setAttribute('aria-expanded', !af);
       this.collapseDiv.classList.toggle('show');
+      this.emit('menuItemSelected', this);
+    }
+
+    expand() {
+      this.aTag.classList.remove('collapsed');
+      this.aTag.setAttribute('aria-expanded', true);
+      this.collapseDiv.classList.add('show');
+    }
+
+    collapse() {
+      this.aTag.classList.add('collapsed');
+      this.aTag.setAttribute('aria-expanded', false);
+      this.collapseDiv.classList.remove('show');
+    }
+
+    isCollapsed() {
+      return !this.collapseDiv.classList.contains('show');
+    }
+
+    isExpanded() {
+      return this.collapseDiv.classList.contains('show');
     }
 
   

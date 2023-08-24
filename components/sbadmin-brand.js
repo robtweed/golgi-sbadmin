@@ -78,6 +78,10 @@ a {
 
     }
 
+    set text(value) {
+      this.childrenTarget.textContent = value;
+    }
+
   
   });
 };

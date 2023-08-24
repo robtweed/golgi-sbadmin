@@ -32,6 +32,11 @@ let def = {
       }
     }
 
+    get itemNo() {
+      let carousel = this.getParentComponent('sbadmin-carousel');
+      return carousel.items.indexOf(this);
+    }
+
   `
 };
 export {def};

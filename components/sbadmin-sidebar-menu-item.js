@@ -46,9 +46,9 @@ a {
   
 </style>
 
-<a class="nav-link" golgi:prop="aTag" href="#" golgi:on_click="switchPage">
+<a class="nav-link" golgi:prop="aTag" href="#" golgi:on_click="clicked">
   <div golgi:prop="iconDiv" class="nav-link-icon">
-    <i golgi:prop="iconElement"></i>
+    <i golgi:prop="iTag"></i>
   </div>
   <span golgi:prop="textTarget"></span>
 </a>
@@ -68,17 +68,20 @@ a {
         this.name = state.name;
       }
       if (state.contentPage) {
-        this.contentPage = state.contentPage;
-        this.rootComponent.addToPage2MenuMap(state.contentPage, this);
+        if (this.contentPage !== state.contentPage) {
+          this.contentPage = state.contentPage;
+        }
       }
       if (state.text) {
         this.textTarget.textContent = state.text;
       }
       if (state.iconName) {
-        this.iconElement.setAttribute('data-feather', state.iconName);
-        this.iconName = state.iconName;
+        if (this.iconName !== state.iconName) {
+          this.iTag.setAttribute('data-feather', state.iconName);
+          this.iconName = state.iconName;
+        }
       }
-      if (!state.iconName) {
+      if (!state.iconName && this.iconDiv.parentNode) {
         this.aTag.removeChild(this.iconDiv);
         this.hasIcon = false;
       }
@@ -90,6 +93,28 @@ a {
       }
     }
 
+    set ContentPage(value) {
+      this.contentPage = value;
+    }
+
+    set text(value) {
+      this.textTarget.textContent = value;
+    }
+
+    set icon(value) {
+      this.iTag.setAttribute('data-feather', value);
+      this.iconName = value;
+    }
+
+    set isActive(active) {
+      if (active) {
+        this.aTag.classList.add('active');
+      }
+      else {
+        this.aTag.classList.remove('active');
+      }
+    }
+
     setActive() {
       this.aTag.classList.add('active');
     }
@@ -98,23 +123,40 @@ a {
       this.aTag.classList.remove('active');
     }
 
-    switchPage() {
+    set isActive(active) {
+      if (active) {
+        this.aTag.classList.add('active');
+      }
+      else {
+        this.aTag.classList.remove('active');
+      }
+    }
+
+    switchToActive() {
+      this.switchPage();
+    }
+
+    clicked() {
+      this.switchPage(true);
+    }
+
+    async switchPage(click) {
       let root = this.rootComponent;
       let activeMenuComponent = root.getMenuItemActive();
       if (activeMenuComponent) {
-        activeMenuComponent.setInactive();
+        activeMenuComponent.isActive = false;
       }
-      this.setActive();
-      root.setMenuItemActive(this);
-      root.switchToPage(this.contentPage);
+      this.isActive = true;
+      await root.switchToPage(this, this.contentPage);
       if (root.menuHidden) {
         root.rootElement.classList.toggle('sidenav-toggled');
       }
+      this.emit('menuItemSelected', activeMenuComponent);
     }
 
     onAfterHooks() {
       if (typeof feather !== 'undefined' && this.hasIcon) {
-        this.context.toSVG(this.iconElement);
+        this.context.toSVG(this.iTag);
       }
     }
 

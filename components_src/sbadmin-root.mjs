@@ -70,7 +70,7 @@ span {
 .sidenav {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
     flex-wrap: nowrap;
     font-size: .9rem;
 }
@@ -192,7 +192,6 @@ small, .small {
   `,
 
   methods: `
-
     getMenuItemActive() {
       return this.ActiveMenuComponent;
     }
@@ -201,21 +200,16 @@ small, .small {
       this.ActiveMenuComponent = comp;
     }
 
-    addToPage2MenuMap(pageName, menuComp) {
-      this.page2MenuMap.set(pageName, menuComp);
-    }
-
-    setPageActive(pageName, obj) {
+    setPageActive(menuComp, pageName, obj) {
 
       // switch the active menu item if appropriate
 
-      let menuComp = this.page2MenuMap.get(pageName);
       if (menuComp) {
         let activeComp = this.getMenuItemActive();
         if (activeComp) {
-          activeComp.setInactive();
+          activeComp.isactive = false;
         }
-        menuComp.setActive();
+        menuComp.isActive = true;
         this.setMenuItemActive(menuComp);
       }
 
@@ -233,14 +227,20 @@ small, .small {
           page.onSelected.call(page, obj);
         }
       }
+      this.activeContentPage = page;
     }
 
-    async switchToPage(pageName, obj) {
+    async switchToPage(menuComponent, pageName, obj) {
       if (!this.contentPages.has(pageName)) {
         this.context.assemblyName = pageName;
-        await this.renderAssembly(pageName, this.contentTarget, this.context);
+        try {
+          let contentPage = await this.renderAssembly(pageName, this.contentTarget, this.context);
+        }
+        catch(err) {
+          console.log(err);
+        }
       }
-      this.setPageActive(pageName, obj);
+      this.setPageActive(menuComponent, pageName, obj);
     }
 
     setState(state) {
@@ -298,28 +298,26 @@ small, .small {
 
     async onBeforeState() {
       this.contentPages = new Map();
-      this.page2MenuMap = new Map();
       this.childrenTarget = this.contentTarget;
 
       this.context.toSVG = function(element) {
-      if (typeof feather !== 'undefined') {
-        const name = element.getAttribute('data-feather');
-        if (name) {
-          let icon = feather.icons[name];
-          if (!icon) {
-            icon = feather.icons['help-circle'];
+        if (typeof feather !== 'undefined' && element.parentNode) {
+          const name = element.getAttribute('data-feather');
+          if (name) {
+            let icon = feather.icons[name];
+            if (!icon) {
+              icon = feather.icons['help-circle'];
+            }
+            const svgString = icon.toSvg();
+            const svgDocument = new DOMParser().parseFromString(
+              svgString,
+              'image/svg+xml'
+            );
+            const svgElement = svgDocument.querySelector('svg');
+            element.parentNode.replaceChild(svgElement, element);
           }
-          const svgString = icon.toSvg();
-          const svgDocument = new DOMParser().parseFromString(
-            svgString,
-            'image/svg+xml',
-          );
-          const svgElement = svgDocument.querySelector('svg');
-          element.parentNode.replaceChild(svgElement, element);
         }
       };
-    }
-
     }
 
   `
