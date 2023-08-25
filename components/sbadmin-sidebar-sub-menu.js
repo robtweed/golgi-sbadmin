@@ -132,11 +132,20 @@ a {
     }
 
     toggle() {
+      if (this.isExpanded) {
+        this.collapse();
+      }
+      else {
+        this.expand();
+        this.emit('menuItemSelected', this);
+      }
+      /*
       this.aTag.classList.toggle('collapsed');
       let af = this.aTag.getAttribute('aria-expanded') === 'true';
       this.aTag.setAttribute('aria-expanded', !af);
       this.collapseDiv.classList.toggle('show');
       this.emit('menuItemSelected', this);
+      */
     }
 
     expand() {
@@ -151,11 +160,11 @@ a {
       this.collapseDiv.classList.remove('show');
     }
 
-    isCollapsed() {
+    get isCollapsed() {
       return !this.collapseDiv.classList.contains('show');
     }
 
-    isExpanded() {
+    get isExpanded() {
       return this.collapseDiv.classList.contains('show');
     }
 

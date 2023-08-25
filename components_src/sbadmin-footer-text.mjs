@@ -6,10 +6,14 @@ let def = {
 .txt-small {
   font-size: 10px;
 }
+
+.inline {
+  display: inline-flex
+}
   `,
 
   html: `
-<div class="txt-small" golgi:prop="textTag"></div>
+<div class="txt-small inline" golgi:prop="textTag"></div>
   `,
 
   methods: `
@@ -33,6 +37,11 @@ let def = {
       }
 
     }
+
+    set text(value) {
+      this.rootElement.textContent = value;
+    }
+
 
   `
 };

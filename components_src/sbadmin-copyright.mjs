@@ -6,10 +6,15 @@ let def = {
 .txt-small {
   font-size: 10px;
 }
+
+.inline {
+  display: inline-flex
+}
+
   `,
 
   html: `
-<p class="txt-small">
+<p class="txt-small inline">
   <span>Copyright &copy; </span>
   <span golgi:prop="textTarget" />
 </p>
@@ -34,6 +39,10 @@ let def = {
       if (state.color) {
         this.rootElement.style.color = state.color;
       }
+    }
+
+    set text(value) {
+      this.textTarget.textContent = value;
     }
 
   `

@@ -76,7 +76,7 @@ a {
   `,
 
   html: `
-<a class="nav-link collapsed" href="javascript:void(0);" golgi:prop="aTag" data-bs-toggle="collapse" aria-expanded="false" golgi:on_click="click">
+<a class="nav-link collapsed" href="javascript:void(0);" golgi:prop="aTag" data-bs-toggle="collapse" aria-expanded="false" golgi:on_click="switchToActive">
   <div class="nav-link-icon">
     <i golgi:prop="iTag"></i>
   </div>
@@ -101,6 +101,9 @@ a {
       }
       if (state.text) {
         this.spanTag.textContent = state.text;
+      }
+      if (state.reactive) {
+        this.isReactive = true;
       }
     }
 
@@ -151,28 +154,104 @@ a {
     set isActive(active) {
       if (active) {
         this.aTag.classList.add('active');
+        this.expand();
+      }
+      else {
+        this.aTag.classList.remove('active');
+        this.collapse();
+      }
+    }
+
+    set highlight(on) {
+      if (on) {
+        this.aTag.classList.add('active');
       }
       else {
         this.aTag.classList.remove('active');
       }
     }
 
-    click() {
-      this.switchToActive(true);
+    isChildMenuComponent(menuComponent) {
+      let found = false;
+      let ok = true;
+      let count = 0;
+      let childComponent = menuComponent;
+      let parentComponent;
+      do {
+        parentComponent = childComponent.getParentComponent('sbadmin-sidebar-nested-menu');
+        count++;
+        if (count > 20) {
+          ok = false;
+          return;
+        }
+        if (!parentComponent) {
+          ok = false;
+          return;
+        }
+        if (parentComponent === this) {
+          found = true;
+          ok = false;
+        }
+        childComponent = parentComponent;
+      }
+      while (ok);
+
+      return found;
     }
 
-    switchToActive(click) {
+    switchToActive() {
+
       let root = this.rootComponent;
+
+      // was another highlightable menu component already active?
+
       let activeMenuComponent = root.getMenuItemActive();
       if (activeMenuComponent) {
-        activeMenuComponent.isActive = false;
+        // if it's not this item, switch selection and expand this nested content
+        if (activeMenuComponent !== this) {
+          activeMenuComponent.isActive = false;
+          this.isActive = true;
+
+          if (this.isChildMenuComponent(activeMenuComponent)) {
+            // collapse the selected nested menu
+            this.collapse();
+          }
+        }
+        else {
+         // if it's the current menu option, toggle it
+         if (this.isExpanded) {
+            this.collapse();
+          }
+          else {
+            this.expand();
+          }
+        }
       }
-      this.isActive = true;
+      else {
+        // otherwise make this the active menu option and expand it
+        this.isActive = true;
+      }
+      // reset the root-level indicator of which is the active menu component
+
       root.setMenuItemActive(this);
+
+      // hide the toggle if it was previously hidden
+
       if (root.menuHidden) {
         root.rootElement.classList.toggle('sidenav-toggled');
       }
-      this.emit('menuItemSelected', activeMenuComponent);
+      this.emit('menuItemSelected', {
+        active: this,
+        inactive: activeMenuComponent
+      });
+    }
+
+    get isCollapsed() {
+      return !this.collapseDiv.classList.contains('show');
+    }
+
+    get isExpanded() {
+      return this.collapseDiv.classList.contains('show');
     }
 
   `

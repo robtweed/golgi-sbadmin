@@ -2972,8 +2972,6 @@ button:focus:not(:focus-visible) {
       this.form = this.getParentComponent('sbadmin-form');
 
       let btnGroup = this.getParentComponent('sbadmin-button-group');
-      console.log('***** btnGroup ***');
-      console.log(btnGroup);
       if (btnGroup) {
         this.cls = 'grouped';
         let btnArr = btnGroup.buttons;

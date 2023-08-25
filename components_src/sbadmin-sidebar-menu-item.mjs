@@ -40,7 +40,7 @@ a {
   `,
 
   html: `
-<a class="nav-link" golgi:prop="aTag" href="#" golgi:on_click="clicked">
+<a class="nav-link" golgi:prop="aTag" href="#" golgi:on_click="switchPage">
   <div golgi:prop="iconDiv" class="nav-link-icon">
     <i golgi:prop="iTag"></i>
   </div>
@@ -127,22 +127,96 @@ a {
       this.switchPage();
     }
 
-    clicked() {
-      this.switchPage(true);
+    isParentMenuComponent(menuComponent) {
+      let found = false;
+      let ok = true;
+      let component = this;
+      let parentComponent;
+      let count = 0;
+      do {
+        count++;
+        if (count > 20) {
+          ok = false;
+          return;
+        }
+        parentComponent = component.getParentComponent('sbadmin-sidebar-nested-menu');
+        if (!parentComponent) {
+          ok = false;
+          return;
+        }
+        if (parentComponent === menuComponent) {
+          found = true;
+          ok = false;
+        }
+        component = parentComponent;
+      }
+      while (ok);
+
+      if (!found) {
+        let ok = true;
+        count = 0;
+        component = this;
+        do {
+          count++;
+          if (count > 20) {
+            ok = false;
+            return;
+          }
+          parentComponent = component.getParentComponent('sbadmin-sidebar-sub-menu');
+          if (!parentComponent) {
+            ok = false;
+            return;
+          }
+          if (parentComponent === menuComponent) {
+            found = true;
+            ok = false;
+          }
+          component = parentComponent;
+        }
+        while (ok);
+      }
+
+      return found;
     }
 
-    async switchPage(click) {
+    async switchPage() {
       let root = this.rootComponent;
       let activeMenuComponent = root.getMenuItemActive();
       if (activeMenuComponent) {
-        activeMenuComponent.isActive = false;
+        // if you've reclicked the active item, ignore
+        if (activeMenuComponent === this) return;
+
+        if (activeMenuComponent.componentName === 'sbadmin-sidebar-menu-item') {
+          activeMenuComponent.isActive = false;
+        }
+        else {
+
+          // is the currently selected item a parent of this item?
+
+          if (this.isParentMenuComponent(activeMenuComponent)) {
+            // just remove the parent's selected highlight but leave expanded
+            activeMenuComponent.highlight = false;
+          }
+          else {
+            // deactivate and collapse previous menu option
+            activeMenuComponent.isActive = false;
+          }
+        } 
       }
+      // make this the currently active menu item
       this.isActive = true;
-      await root.switchToPage(this, this.contentPage);
+      // switch to this item's content page
+      if (this.contentPage) {
+        await root.switchToPage(this, this.contentPage);
+      }
+      // collapse the menu if it was previously hidden 
       if (root.menuHidden) {
         root.rootElement.classList.toggle('sidenav-toggled');
       }
-      this.emit('menuItemSelected', activeMenuComponent);
+      this.emit('menuItemSelected', {
+        active: this,
+        inactive: activeMenuComponent
+      });
     }
 
     onAfterHooks() {
