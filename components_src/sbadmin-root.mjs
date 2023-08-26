@@ -192,57 +192,6 @@ small, .small {
   `,
 
   methods: `
-    getMenuItemActive() {
-      return this.ActiveMenuComponent;
-    }
-
-    setMenuItemActive(comp) {
-      this.ActiveMenuComponent = comp;
-    }
-
-    setPageActive(menuComp, pageName, obj) {
-
-      // switch the active menu item if appropriate
-
-      if (menuComp) {
-        let activeComp = this.getMenuItemActive();
-        if (activeComp) {
-          activeComp.isactive = false;
-        }
-        menuComp.isActive = true;
-        this.setMenuItemActive(menuComp);
-      }
-
-      // set selected page to active
-      // first hide allcontent  pages
-      let page;
-      for (page of this.contentPages.values()) {
-        page.hide();
-      }
-      page = this.contentPages.get(pageName);
-      
-      if (page) {
-        page.show();
-        if (page.onSelected) {
-          page.onSelected.call(page, obj);
-        }
-      }
-      this.activeContentPage = page;
-    }
-
-    async switchToPage(menuComponent, pageName, obj) {
-      if (!this.contentPages.has(pageName)) {
-        this.context.assemblyName = pageName;
-        try {
-          let contentPage = await this.renderAssembly(pageName, this.contentTarget, this.context);
-        }
-        catch(err) {
-          console.log(err);
-        }
-      }
-      this.setPageActive(menuComponent, pageName, obj);
-    }
-
     setState(state) {
       if (state.header_bg_color) {
         this.topbarTarget.style.backgroundColor = state.header_bg_color;
@@ -296,28 +245,48 @@ small, .small {
 
     }
 
+    toggleSideNav() {
+      this.rootElement.classList.toggle('sidenav-toggled');
+    }
+
+    hideSideNav() {
+      this.rootElement.classList.remove('sidenav-toggled');
+    }
+
+    showSideNav() {
+      this.rootElement.classList.add('sidenav-toggled');
+    }
+
     async onBeforeState() {
       this.contentPages = new Map();
       this.childrenTarget = this.contentTarget;
+    }
 
-      this.context.toSVG = function(element) {
-        if (typeof feather !== 'undefined' && element.parentNode) {
-          const name = element.getAttribute('data-feather');
-          if (name) {
-            let icon = feather.icons[name];
-            if (!icon) {
-              icon = feather.icons['help-circle'];
-            }
-            const svgString = icon.toSvg();
-            const svgDocument = new DOMParser().parseFromString(
-              svgString,
-              'image/svg+xml'
-            );
-            const svgElement = svgDocument.querySelector('svg');
-            element.parentNode.replaceChild(svgElement, element);
+    get shouldSidebarHide() {
+      let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      if (w < 992) {
+        return true;
+      }
+      return false;
+    }
+
+    toSVG(element) {
+      if (typeof feather !== 'undefined' && element.parentNode) {
+        const name = element.getAttribute('data-feather');
+        if (name) {
+          let icon = feather.icons[name];
+          if (!icon) {
+            icon = feather.icons['help-circle'];
           }
+          const svgString = icon.toSvg();
+          const svgDocument = new DOMParser().parseFromString(
+            svgString,
+            'image/svg+xml'
+          );
+          const svgElement = svgDocument.querySelector('svg');
+          element.parentNode.replaceChild(svgElement, element);
         }
-      };
+      }
     }
 
   `

@@ -117,17 +117,28 @@ a {
       this.aTag.setAttribute('data-bs-target', '#' + id);
       this.aTag.setAttribute('aria-controls', id);
       this.childrenTarget.id = "subMenu_" + this.name;
-      let parentMenu = this.getParentComponent('sbadmin-sidebar-sub-menu');
-      if (!parentMenu) parentMenu = this.getParentComponent('sbadmin-sidebar-nested-menu');
-      if (parentMenu) {
-        id = parentMenu.childrenTarget.id;
+
+      this.menuType = 'submenu';
+      if (this.parentComponent.componentName === 'sbadmin-sidebar-menu') {
+        this.rootMenu = this.parentComponent;
+      }
+      else {
+        if (this.parentComponent.rootMenu) {
+          this.rootMenu = this.parentComponent.rootMenu;
+          this.parentMenuComponent = this.parentComponent;
+        }
+      }
+      
+      let parentMenuType = this.parentMenuComponent && this.parentMenuComponent.menuType;
+      if (parentMenuType === 'submenu' || parentMenuType === 'nested') {
+        id = this.parentMenuComponent.childrenTarget.id;
         this.collapseDiv.setAttribute('data-bs-parent', '#' + id);
       }
     }
 
     onAfterHooks() {
       if (typeof feather !== 'undefined') {
-        this.context.toSVG(this.chevronTag);
+        this.rootComponent.toSVG(this.chevronTag);
       }
     }
 
@@ -139,13 +150,6 @@ a {
         this.expand();
         this.emit('menuItemSelected', this);
       }
-      /*
-      this.aTag.classList.toggle('collapsed');
-      let af = this.aTag.getAttribute('aria-expanded') === 'true';
-      this.aTag.setAttribute('aria-expanded', !af);
-      this.collapseDiv.classList.toggle('show');
-      this.emit('menuItemSelected', this);
-      */
     }
 
     expand() {
@@ -166,6 +170,40 @@ a {
 
     get isExpanded() {
       return this.collapseDiv.classList.contains('show');
+    }
+
+    async addMenuItem() {
+      return await this.renderComponent('sbadmin-sidebar-menu-item', this.childrenTarget, this.context);
+    }
+
+    async addSubMenu() {
+      return await this.renderComponent('sbadmin-sidebar-sub-menu', this.childrenTarget, this.context);
+    }
+
+    removeMenuItems() {
+      for (let item of this.menuItems) {
+        item.remove();
+      }
+    }
+
+    removeMenuItem(index) {
+      this.menuItems[index].remove();
+    }
+
+    get menuItems() {
+      return [...this.childrenTarget.children];
+    }
+
+    get menuItemCount() {
+      return this.menuItems.length;
+    }
+
+    get hasMenuItems() {
+      return this.menuItemCount > 0;
+    }
+
+    getMenuItem(index) {
+      return this.menuItems[index];
     }
 
   

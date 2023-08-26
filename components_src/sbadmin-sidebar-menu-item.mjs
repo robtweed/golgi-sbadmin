@@ -70,6 +70,7 @@ a {
         if (this.iconName !== state.iconName) {
           this.iTag.setAttribute('data-feather', state.iconName);
           this.iconName = state.iconName;
+          this.renderIcon();
         }
       }
       if (!state.iconName && this.iconDiv.parentNode) {
@@ -95,6 +96,7 @@ a {
     set icon(value) {
       this.iTag.setAttribute('data-feather', value);
       this.iconName = value;
+      this.renderIcon();
     }
 
     set isActive(active) {
@@ -130,63 +132,38 @@ a {
     isParentMenuComponent(menuComponent) {
       let found = false;
       let ok = true;
-      let component = this;
-      let parentComponent;
-      let count = 0;
+      let thisMenuComponent = this;
+      let parentMenuComponent;
+
       do {
-        count++;
-        if (count > 20) {
+        parentMenuComponent = thisMenuComponent.parentMenuComponent;
+        if (!parentMenuComponent) {
           ok = false;
           return;
         }
-        parentComponent = component.getParentComponent('sbadmin-sidebar-nested-menu');
-        if (!parentComponent) {
-          ok = false;
-          return;
-        }
-        if (parentComponent === menuComponent) {
+        if (parentMenuComponent === menuComponent) {
           found = true;
           ok = false;
         }
-        component = parentComponent;
+        thisMenuComponent = parentMenuComponent;
       }
       while (ok);
-
-      if (!found) {
-        let ok = true;
-        count = 0;
-        component = this;
-        do {
-          count++;
-          if (count > 20) {
-            ok = false;
-            return;
-          }
-          parentComponent = component.getParentComponent('sbadmin-sidebar-sub-menu');
-          if (!parentComponent) {
-            ok = false;
-            return;
-          }
-          if (parentComponent === menuComponent) {
-            found = true;
-            ok = false;
-          }
-          component = parentComponent;
-        }
-        while (ok);
-      }
 
       return found;
     }
 
     async switchPage() {
-      let root = this.rootComponent;
-      let activeMenuComponent = root.getMenuItemActive();
+      let activeMenuComponent = this.rootMenu.getMenuItemActive();
       if (activeMenuComponent) {
         // if you've reclicked the active item, ignore
-        if (activeMenuComponent === this) return;
+        if (activeMenuComponent === this) {
+          if (this.rootComponent.shouldSidebarHide) {
+            this.rootComponent.hideSideNav();
+          }
+          return;
+        }
 
-        if (activeMenuComponent.componentName === 'sbadmin-sidebar-menu-item') {
+        if (activeMenuComponent.menuType === 'item') {
           activeMenuComponent.isActive = false;
         }
         else {
@@ -207,22 +184,40 @@ a {
       this.isActive = true;
       // switch to this item's content page
       if (this.contentPage) {
-        await root.switchToPage(this, this.contentPage);
+        await this.rootMenu.switchToPage(this, this.contentPage);
       }
-      // collapse the menu if it was previously hidden 
-      if (root.menuHidden) {
-        root.rootElement.classList.toggle('sidenav-toggled');
+      // collapse the menu if the screen is too narrow
+      if (this.rootComponent.shouldSidebarHide) {
+        this.rootComponent.hideSideNav();
       }
       this.emit('menuItemSelected', {
         active: this,
-        inactive: activeMenuComponent
+        inactive: activeMenuComponent,
       });
     }
 
-    onAfterHooks() {
+    renderIcon() {
       if (typeof feather !== 'undefined' && this.hasIcon) {
-        this.context.toSVG(this.iTag);
+        this.rootComponent.toSVG(this.iTag);
       }
+    }
+
+    onBeforeState() {
+      this.hasIcon = true;
+      this.menuType = 'item';
+      if (this.parentComponent.componentName === 'sbadmin-sidebar-menu') {
+        this.rootMenu = this.parentComponent;
+      }
+      else {
+        if (this.parentComponent.rootMenu) {
+          this.rootMenu = this.parentComponent.rootMenu;
+          this.parentMenuComponent = this.parentComponent;
+        }
+      }
+    }
+
+    onAfterHooks() {
+      this.renderIcon();
     }
 
   `

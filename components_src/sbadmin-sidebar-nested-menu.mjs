@@ -98,6 +98,7 @@ a {
       if (state.iconName) {
         this.iTag.setAttribute('data-feather', state.iconName);
         this.iconName = state.iconName;
+        this.renderIcon();
       }
       if (state.text) {
         this.spanTag.textContent = state.text;
@@ -114,6 +115,13 @@ a {
     set icon(value) {
       this.iTag.setAttribute('data-feather', value);
       this.iconName = value;
+      this.renderIcon();
+    }
+
+    renderIcon() {
+      if (typeof feather !== 'undefined' && this.hasIcon) {
+        this.rootComponent.toSVG(this.iTag);
+      }
     }
 
     onBeforeState() {
@@ -125,12 +133,24 @@ a {
       this.childrenTarget.id = "subMenu_" + this.name;
       let parentId = this.getParentComponent('sbadmin-sidebar-menu').childrenTarget.id;
       this.collapseDiv.setAttribute('data-bs-parent', '#' + parentId);
+      this.hasIcon = true;
+      this.menuType = 'nested';
+
+      if (this.parentComponent.componentName === 'sbadmin-sidebar-menu') {
+        this.rootMenu = this.parentComponent;
+      }
+      else {
+        if (this.parentComponent.rootMenu) {
+          this.rootMenu = this.parentComponent.rootMenu;
+          this.parentMenuComponent = this.parentComponent;
+        }
+      }
     }
 
     onAfterHooks() {
       if (typeof feather !== 'undefined') {
-        this.context.toSVG(this.iTag);
-        this.context.toSVG(this.chevronTag);
+        this.rootComponent.toSVG(this.iTag);
+        this.rootComponent.toSVG(this.chevronTag);
       }
     }
 
@@ -174,25 +194,19 @@ a {
     isChildMenuComponent(menuComponent) {
       let found = false;
       let ok = true;
-      let count = 0;
-      let childComponent = menuComponent;
-      let parentComponent;
+      let childMenuComponent = menuComponent;
+      let parentMenuComponent;
       do {
-        parentComponent = childComponent.getParentComponent('sbadmin-sidebar-nested-menu');
-        count++;
-        if (count > 20) {
+        parentMenuComponent = childMenuComponent.parentMenuComponent;
+        if (!parentMenuComponent) {
           ok = false;
           return;
         }
-        if (!parentComponent) {
-          ok = false;
-          return;
-        }
-        if (parentComponent === this) {
+        if (parentMenuComponent === this) {
           found = true;
           ok = false;
         }
-        childComponent = parentComponent;
+        childMenuComponent = parentMenuComponent;
       }
       while (ok);
 
@@ -201,11 +215,9 @@ a {
 
     switchToActive() {
 
-      let root = this.rootComponent;
-
       // was another highlightable menu component already active?
 
-      let activeMenuComponent = root.getMenuItemActive();
+      let activeMenuComponent = this.rootMenu.getMenuItemActive();
       if (activeMenuComponent) {
         // if it's not this item, switch selection and expand this nested content
         if (activeMenuComponent !== this) {
@@ -233,13 +245,8 @@ a {
       }
       // reset the root-level indicator of which is the active menu component
 
-      root.setMenuItemActive(this);
+      this.rootMenu.setMenuItemActive(this);
 
-      // hide the toggle if it was previously hidden
-
-      if (root.menuHidden) {
-        root.rootElement.classList.toggle('sidenav-toggled');
-      }
       this.emit('menuItemSelected', {
         active: this,
         inactive: activeMenuComponent
@@ -252,6 +259,47 @@ a {
 
     get isExpanded() {
       return this.collapseDiv.classList.contains('show');
+    }
+
+    deleteSubMenuOptions() {
+      let options = [...this.childrenTarget.children];
+      for (let option of options) {
+        option.remove();
+      }
+    }
+
+    async addMenuItem() {
+      return await this.renderComponent('sbadmin-sidebar-menu-item', this.childrenTarget, this.context);
+    }
+
+    async addSubMenu() {
+      return await this.renderComponent('sbadmin-sidebar-sub-menu', this.childrenTarget, this.context);
+    }
+
+    removeMenuItems() {
+      for (let item of this.menuItems) {
+        item.remove();
+      }
+    }
+
+    removeMenuItem(index) {
+      this.menuItems[index].remove();
+    }
+
+    get menuItems() {
+      return [...this.childrenTarget.children];
+    }
+
+    get menuItemCount() {
+      return this.menuItems.length;
+    }
+
+    get hasMenuItems() {
+      return this.menuItemCount > 0;
+    }
+
+    getMenuItem(index) {
+      return this.menuItems[index];
     }
 
   `

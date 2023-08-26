@@ -34,10 +34,6 @@ let def = {
       this.name = this.context.assemblyName;
       this.rootComponent.contentPages.set(this.name, this);
       this.onSelected = (obj) => {
-        let w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        if (w < 992) {
-          this.rootComponent.rootElement.classList.remove('sidenav-toggled');
-        }
         this.emit('selected', this);
       };
     }

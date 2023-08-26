@@ -117,12 +117,11 @@ button {
 
     toggle(e) {
       e.preventDefault();
-      let parent = this.getParentComponent('sbadmin-root');
-      parent.rootElement.classList.toggle('sidenav-toggled');
+      this.rootComponent.toggleSideNav();
     }
 
     onAfterHooks() {
-      this.context.toSVG(this.icon) ;
+      this.rootComponent.toSVG(this.icon) ;
     }
 
   
