@@ -96,6 +96,9 @@ let def = {
       if (state.fontSize) {
         this.fontSize = state.fontSize;
       }
+      if (state.align) {
+        this.rootElement.style.textAlign = state.align;
+      }
     }
 
     set text(text) {
@@ -118,7 +121,7 @@ let def = {
 
     set fontSize(size) {
       if (size.includes('pt')) {
-        this.rootElement.style = 'font-size: ' + size + ';';
+        this.rootElement.style.fontSize =  size;
       }
       else{
         this.rootElement.classList.add('fs-' + size);

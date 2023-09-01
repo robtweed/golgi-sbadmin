@@ -34,7 +34,7 @@ let def = {
       this.name = this.context.assemblyName;
       this.rootComponent.contentPages.set(this.name, this);
       this.onSelected = (obj) => {
-        this.emit('selected', this);
+        this.emit('selected', obj);
       };
     }
 

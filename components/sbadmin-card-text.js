@@ -105,6 +105,9 @@ export function load(ctx) {
       if (state.fontSize) {
         this.fontSize = state.fontSize;
       }
+      if (state.align) {
+        this.rootElement.style.textAlign = state.align;
+      }
     }
 
     set text(text) {
@@ -127,7 +130,7 @@ export function load(ctx) {
 
     set fontSize(size) {
       if (size.includes('pt')) {
-        this.rootElement.style = 'font-size: ' + size + ';';
+        this.rootElement.style.fontSize =  size;
       }
       else{
         this.rootElement.classList.add('fs-' + size);

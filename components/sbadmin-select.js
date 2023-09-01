@@ -165,6 +165,10 @@ label-hidden {
       return this.select.querySelectorAll('option[value="' + value + '"]');
     }
 
+    get selectedText() {
+      return this.select.options[this.select.selectedIndex].text;
+    }
+
     onBeforeState() {
       this.multiple = false;
       this.select.id = this.name;
