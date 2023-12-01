@@ -370,6 +370,14 @@ div {
       ];
     }
 
+    show() {
+      this.rootElement.style = "display:''";
+    }
+
+    hide() {
+      this.rootElement.style = "display: none";
+    }
+
   `
 };
 export {def};

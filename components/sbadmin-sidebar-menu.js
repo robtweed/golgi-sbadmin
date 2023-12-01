@@ -108,6 +108,7 @@ export function load(ctx) {
      
       if (page) {
         page.show();
+        if (menuComp) page.menuComponent = menuComp;
         if (page.onSelected) {
           page.onSelected.call(page, obj);
         }
