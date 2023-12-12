@@ -282,6 +282,15 @@ label-hidden {
       if (state.labelcls) {
         this.label.className = state.labelcls;
       }
+      if (typeof state.min !== 'undefined') {
+        this.input.setAttribute('min', state.min);
+      }
+      if (typeof state.max !== 'undefined') {
+        this.input.setAttribute('max', state.max);
+      }
+      if (typeof state.step !== 'undefined') {
+        this.input.setAttribute('step', state.step);
+      }
 
     }
 

@@ -77,6 +77,10 @@ let def = {
   position: absolute !important;
 }
 
+.border-top {
+  border-top: 1px solid #e0e5ec !important;
+}
+
 .top-0 {
   top: -15px !important;
 }
@@ -102,16 +106,84 @@ let def = {
   display: flex !important;
 }
 
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mt-1 {
+  margin-top: 0.25rem !important;
+}
+
+.mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+.mt-4 {
+  margin-top: 1.5rem !important;
+}
+
+.mt-5 {
+  margin-top: 2.5rem !important;
+}
+
+.mt-10 {
+  margin-top: 6rem !important;
+}
+
+.mt-15 {
+  margin-top: 9rem !important;
+}
+
+.mt-auto {
+  margin-top: auto !important;
+}
+.pt-0 {
+  padding-top: 0 !important;
+}
+
+.pt-1 {
+  padding-top: 0.25rem !important;
+}
+
+.pt-2 {
+  padding-top: 0.5rem !important;
+}
+
+.pt-3 {
+  padding-top: 1rem !important;
+}
+
+.pt-4 {
+  padding-top: 1.5rem !important;
+}
+
+.pt-5 {
+  padding-top: 2.5rem !important;
+}
+
+.pt-10 {
+  padding-top: 6rem !important;
+}
+
+.pt-15 {
+  padding-top: 9rem !important;
+}
   `,
 
   html: `
 <div class="toast position-absolute top-0 start-50 translate-middle-x" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-      <strong class="me-auto">Error!</strong>
-      <small class="text-muted">just now</small>
+    <div class="toast-header" golgi:prop="header">
+      <strong class="me-auto" golgi:prop="headerText">Error!</strong>
+      <small class="text-muted" golgi:prop="headerTimeText">just now</small>
     </div>
   <div class="d-flex">
-    <div class="toast-body" golgi:prop="messageTag"></div>
+    <div class="toast-body" golgi:prop="childrenTarget">
+      <span golgi:prop="bodyText"></span>
+    </div>
   </div>
 </div>
   `,
@@ -124,6 +196,19 @@ let def = {
       if (typeof state.animation !== 'undefined') {
         this.animation = state.animation;
       }
+      if (typeof state.autohide !== 'undefined') {
+        this.autohide = (state.autohide === 'true');
+      }
+      if (state.headerText) {
+        this.headerText.textContent = state.headerText;
+      }
+      if (state.headerTime) {
+        this.headerTimeText.textContent = state.headerTime;
+      }
+      if (state.text) {
+        this.bodyText.textContent = state.text;
+      }
+
     }
 
     show() {
@@ -134,23 +219,40 @@ let def = {
       this.rootElement.classList.remove('show');
     }
 
+    showHeader() {
+      this.header.style.display = '';
+    }
+
+    hiderHeader() {
+      this.header.style.display = 'none';
+    }
+
     onBeforeState() {
       this.delay = 3000;
       this.animation = true;
+      this.autohide = true;
     }
 
     onAfterHooks() {
       this.toast = new bootstrap.Toast(this.rootElement, {
         delay: this.delay,
-        animation: this.animation
+        animation: this.animation,
+        autohide: this.autohide
       });
     }
 
     display(text) {
-      this.messageTag.textContent = text;
+      this.bodyText.innerHTML = text;
       this.toast.show();
     }
 
+    set headerTxt(text) {
+      this.headerText.textContent = text;
+    }
+
+    set timeTxt(text) {
+      this.headerTimeText.textContent = text;
+    }
   `
 };
 export {def};
