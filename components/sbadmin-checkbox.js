@@ -65,6 +65,7 @@ export function load(ctx) {
         this.checkbox.classList.toggle('showImage');
       }
       this.checkboxGroup.form.emit('changed', this.checkboxGroup);
+      this.emit('clicked');
     }
 
     set switch(value) {
