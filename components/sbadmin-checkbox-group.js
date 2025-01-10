@@ -151,6 +151,9 @@ label-hidden {
         if (state.checked) {
           cb.check();
         }
+        if (state.scale) {
+          cb.checkbox.style.transform = 'scale(' + state.scale + ')';
+        }
         this.cb = cb;
         return;
       }
