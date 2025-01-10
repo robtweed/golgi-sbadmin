@@ -135,6 +135,7 @@ label-hidden {
       if (state.value) {
         // dynamically add a single checkbox
         let cb = await this.renderComponent('sbadmin-checkbox', this.childrenTarget, this.context);
+        this.emit('cbReady', cb);
         cb.value = state.value;
         if (state.label) {
           cb.labelText = state.label;
@@ -152,7 +153,7 @@ label-hidden {
           cb.check();
         }
         if (state.scale) {
-          cb.checkbox.style.transform = 'scale(' + state.scale + ')';
+          cb.checkbox.style.transform = 'scale(' + +state.scale + ')';
         }
         this.cb = cb;
         return;
