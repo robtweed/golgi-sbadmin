@@ -310,6 +310,11 @@ th {
 
       for (let row of data.body) {
         let tr = addRow(this.body);
+        let c0 = row[0];
+        if (c0.cls) {
+          tr.classList.add(c0.cls);
+          row.shift()
+        }
         for (let cell of row) {
           addCell(tr, cell.value, cell.span);
         }
