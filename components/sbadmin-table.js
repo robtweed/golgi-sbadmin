@@ -290,8 +290,9 @@ th {
         return th;
       }
 
-      function addCell(row, value, span) {
+      function addCell(row, value, span, cls) {
         let td = document.createElement('td');
+        if (cls) td.classList.add(cls);
         if (span) td.setAttribute('colspan', span);
         if (typeof value !== 'undefined') td.textContent = value;
         row.appendChild(td);
@@ -316,7 +317,7 @@ th {
           row.shift()
         }
         for (let cell of row) {
-          addCell(tr, cell.value, cell.span);
+          addCell(tr, cell.value, cell.span, cell.cls);
         }
       }
     }
