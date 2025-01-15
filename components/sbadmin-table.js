@@ -201,6 +201,10 @@ th {
   border-color: #373e47;
 }
 
+.center-text {
+  text-align: center;
+}
+
 .table-responsive, .dataTable-wrapper .dataTable-container {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -292,7 +296,12 @@ th {
 
       function addCell(row, value, span, cls) {
         let td = document.createElement('td');
-        if (cls) td.classList.add(cls);
+        if (cls) {
+          let pcs = cls.split(' ');
+          for (let pc of pcs) {
+            td.classList.add(pc);
+          }
+        }
         if (span) td.setAttribute('colspan', span);
         if (typeof value !== 'undefined') td.textContent = value;
         row.appendChild(td);
@@ -313,8 +322,11 @@ th {
         let tr = addRow(this.body);
         let c0 = row[0];
         if (c0.cls) {
-          tr.classList.add(c0.cls);
-          row.shift()
+          let pcs = c0.cls.split(' ');
+          for (let pc of pcs) {
+            tr.classList.add(pc);
+          }
+          row.shift();
         }
         for (let cell of row) {
           addCell(tr, cell.value, cell.span, cell.cls);
